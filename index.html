@@ -1902,6 +1902,16 @@ body.wah-rpt-printing .rpt-footer,
 }
 
 </style>
+<style id="wah-field-row-css">
+/* 標籤換行時，同一列的輸入框仍對齊：標籤列共用高度，輸入框頂端齊平 */
+.wah-field-row > div { display: flex; flex-direction: column; }
+.wah-field-row > div > label { flex: 1 0 auto; }
+@supports (grid-template-rows: subgrid) {
+  .wah-field-row > div { display: grid; grid-row: span 2; grid-template-rows: subgrid; grid-template-columns: minmax(0, 1fr); min-width: 0; row-gap: 0; }
+  .wah-field-row > div > label { align-self: start; }
+  .wah-field-row > div > :is(input, select) { align-self: start; width: 100%; min-width: 0; }
+}
+</style>
 <style id="wah-ocr-demo-css">
 /* ===== 文件辨識・待確認（示範版專用；依 Mai 示意圖 ocr_review_mockup） ===== */
 #tab-ocr-review{--o-navy:#1B2B4B;--o-dark:#0F1A2E;--o-gold:#B8935A;--o-gold-text:#7A5C2E;--o-text:#141B26;--o-grey:#5B6577;--o-bg:#F7F5F0;--o-ok:#2F6B4F;--o-alert:#9B2C2C;--o-line:#E5E1D8;--o-line2:#D4CFC4;--o-warn-bg:#F6EEDC;--o-warn-line:#D9C49A;--o-mute:#F1F2F4;--o-field:#D8DCE3}
@@ -2414,7 +2424,7 @@ button[onclick*="wahDownloadFile"], button[onclick="window.print()"], #wah-rpt-p
                     <h3 class="text-sm font-bold text-[#1B2B4B] border-b border-slate-100 pb-2 flex items-center gap-1.5">
                         <span class="material-icons text-base">badge</span> 壹、案主基本資料與跨境國籍設定
                     </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs wah-field-row">
                         <div>
                             <label class="font-bold text-slate-700 block mb-1">被繼承人 / 案主姓名</label>
                             <input type="text" id="ed-deceasedName" oninput="saveCurrentClientFromEditor(false)" class="input-std font-bold">
