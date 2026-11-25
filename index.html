@@ -1901,6 +1901,147 @@ body.wah-rpt-printing .rpt-footer,
 }
 
 </style>
+<style id="wah-ocr-demo-css">
+/* ===== 文件辨識・待確認（示範版專用；依 Mai 示意圖 ocr_review_mockup） ===== */
+#tab-ocr-review{--o-navy:#1B2B4B;--o-dark:#0F1A2E;--o-gold:#B8935A;--o-gold-text:#7A5C2E;--o-text:#141B26;--o-grey:#5B6577;--o-bg:#F7F5F0;--o-ok:#2F6B4F;--o-alert:#9B2C2C;--o-line:#E5E1D8;--o-line2:#D4CFC4;--o-warn-bg:#F6EEDC;--o-warn-line:#D9C49A;--o-mute:#F1F2F4;--o-field:#D8DCE3}
+#tab-ocr-review .ocr-shell{background:#fff;border:1px solid #E2E8F0;border-radius:1.25rem;box-shadow:0 4px 20px -2px rgba(27,43,75,.05);overflow:hidden;color:var(--o-text);font-variant-numeric:tabular-nums}
+#tab-ocr-review .ocr-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 20px;border-bottom:1px solid var(--o-line);box-shadow:inset 0 -2px 0 0 var(--o-gold)}
+#tab-ocr-review .ocr-top__main{flex:1 1 220px;min-width:0}
+#tab-ocr-review .ocr-kicker{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--o-gold-text);font-weight:600}
+#tab-ocr-review .ocr-title{font-family:"Noto Serif TC",serif;font-weight:700;font-size:20px;color:var(--o-navy);margin:0;line-height:1.3}
+#tab-ocr-review .ocr-tags{display:flex;gap:8px;flex-wrap:wrap}
+#tab-ocr-review .ocr-tag{display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:2px 10px;border:1px solid var(--o-line2);background:#fff;color:var(--o-grey);font-size:12px;white-space:nowrap}
+#tab-ocr-review .ocr-tag b{color:var(--o-navy)}
+#tab-ocr-review .ocr-tag i{width:6px;height:6px;border-radius:50%;background:var(--o-gold);display:inline-block}
+#tab-ocr-review .ocr-tag--bg{background:var(--o-bg)}
+#tab-ocr-review .ocr-demo-note{margin:0;max-width:none;padding:10px 20px;background:var(--o-warn-bg);border-bottom:1px solid var(--o-warn-line);color:var(--o-gold-text);font-size:13px;line-height:1.6}
+#tab-ocr-review .ocr-demo-note strong{color:var(--o-alert)}
+#tab-ocr-review .ocr-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:8px 20px;background:var(--o-bg);border-bottom:1px solid var(--o-line);font-size:14px}
+#tab-ocr-review .ocr-meta strong{color:var(--o-navy)}
+#tab-ocr-review .ocr-meta__sep{width:1px;height:14px;background:var(--o-line2)}
+#tab-ocr-review .ocr-meta__muted{margin-left:auto;color:var(--o-grey);font-size:13px}
+#tab-ocr-review .ocr-link{background:none;border:0;color:var(--o-navy);font-weight:700;padding:0;cursor:pointer}
+#tab-ocr-review .ocr-link:hover{text-decoration:underline}
+#tab-ocr-review .ocr-work{display:flex;align-items:flex-start;background:var(--o-bg)}
+#tab-ocr-review .ocr-viewer{flex:0 0 55%;width:55%;min-width:0;padding:16px 12px 16px 20px}
+#tab-ocr-review .ocr-panel{flex:1 1 45%;min-width:0;padding:16px 20px 16px 8px}
+#tab-ocr-review .ocr-toolbar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+#tab-ocr-review .ocr-toolbar__file{margin-right:auto;color:var(--o-grey);font-size:13px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+#tab-ocr-review .ocr-tool{height:32px;padding:0 10px;background:#fff;border:1px solid var(--o-navy);color:var(--o-navy);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+#tab-ocr-review .ocr-zoom{min-width:42px;text-align:center;font-size:13px;font-weight:700;color:var(--o-navy)}
+#tab-ocr-review .ocr-stage{position:relative;background:#EDE9E0;border:1px solid var(--o-line2);padding:20px 12px;overflow:auto;max-height:820px;display:flex;flex-direction:column;align-items:center}
+#tab-ocr-review .ocr-doc-wrap{position:relative;width:min(560px,100%);transform-origin:top center;transition:transform .2s}
+#tab-ocr-review .ocr-photo{display:block;width:100%;height:auto;background:#fff;box-shadow:0 8px 28px rgba(15,26,46,.1)}
+#tab-ocr-review .ocr-doc{position:relative;background:#FBF8F1;color:var(--o-dark);box-shadow:0 8px 28px rgba(15,26,46,.07),0 0 0 1px rgba(27,43,75,.08);font-family:"Noto Serif TC","Noto Sans TC",serif}
+#tab-ocr-review .ocr-doc__wm{position:absolute;inset:0;pointer-events:none;overflow:hidden;background-image:repeating-linear-gradient(-22deg,transparent 0 86px,rgba(155,44,44,.045) 86px 88px)}
+#tab-ocr-review .ocr-doc__wm span{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%) rotate(-28deg);font-weight:700;font-size:52px;letter-spacing:.4em;color:rgba(155,44,44,.12);white-space:nowrap}
+#tab-ocr-review .ocr-doc__inner{position:relative;padding:20px 24px 16px}
+#tab-ocr-review .ocr-doc__brand{display:flex;align-items:center;gap:12px}
+#tab-ocr-review .ocr-doc__brand svg{width:44px;height:44px;flex:0 0 44px}
+#tab-ocr-review .ocr-doc__co{font-weight:700;font-size:15px;color:var(--o-navy);letter-spacing:.08em}
+#tab-ocr-review .ocr-doc__en{font-family:Inter,sans-serif;font-size:8.5px;letter-spacing:.14em;color:var(--o-grey);text-transform:uppercase}
+#tab-ocr-review .ocr-doc__rule{border:0;border-top:1px solid var(--o-gold);margin:8px 0 10px}
+#tab-ocr-review .ocr-doc__h{text-align:center;font-weight:700;font-size:21px;letter-spacing:.36em;color:var(--o-navy);margin:0}
+#tab-ocr-review .ocr-doc__hs{text-align:center;font-size:11px;color:var(--o-gold-text);letter-spacing:.2em;margin:2px 0 8px}
+#tab-ocr-review .ocr-doc__notice{text-align:center;font-size:10px;color:var(--o-alert);margin:0 0 10px;font-family:sans-serif}
+#tab-ocr-review .ocr-grid{width:100%;border-collapse:collapse;font-family:sans-serif;font-size:12px}
+#tab-ocr-review .ocr-grid th,#tab-ocr-review .ocr-grid td{border:1px solid #C9C3B6;padding:5px 8px;text-align:left;position:relative}
+#tab-ocr-review .ocr-grid th{width:30%;background:#F3EFE6;color:var(--o-navy);font-weight:700}
+#tab-ocr-review .ocr-grid td{background:#FFFCF6}
+#tab-ocr-review .ocr-grid tr.is-hot th{background:#fff;box-shadow:inset 2px 2px 0 0 var(--o-navy),inset 0 -2px 0 0 var(--o-navy)}
+#tab-ocr-review .ocr-grid tr.is-hot td{background:#fff;box-shadow:inset -2px 2px 0 0 var(--o-navy),inset 0 -2px 0 0 var(--o-navy)}
+#tab-ocr-review .ocr-grid tr.is-hot th::before{content:"";position:absolute;top:-1px;left:-1px;width:11px;height:11px;border-top:2px solid var(--o-gold);border-left:2px solid var(--o-gold)}
+#tab-ocr-review .ocr-grid tr.is-hot td::after{content:"";position:absolute;bottom:-1px;right:-1px;width:11px;height:11px;border-bottom:2px solid var(--o-gold);border-right:2px solid var(--o-gold)}
+#tab-ocr-review .ocr-badge{position:absolute;top:-11px;right:-11px;z-index:3;width:22px;height:22px;border-radius:50%;background:var(--o-navy);color:#fff;font:700 11px/22px sans-serif;text-align:center;box-shadow:0 0 0 2px #FBF8F1}
+#tab-ocr-review .ocr-doc__note{margin:10px 0 0;font-family:sans-serif;font-size:10.5px;color:var(--o-grey);line-height:1.55;position:relative;padding:2px 4px}
+#tab-ocr-review .ocr-doc__note.is-hot{outline:2px solid var(--o-navy);background:#fff}
+#tab-ocr-review .ocr-doc__foot{margin-top:12px;padding-top:8px;border-top:1px solid #DDD6C8;font-family:sans-serif;font-size:9.5px;color:var(--o-grey);text-align:center}
+#tab-ocr-review .ocr-scan{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+#tab-ocr-review .ocr-scan__veil{position:absolute;inset:0;background:rgba(15,26,46,.18)}
+#tab-ocr-review .ocr-scan__line{position:absolute;left:0;right:0;height:3px;background:var(--o-gold);box-shadow:0 0 14px 3px rgba(184,147,90,.85);animation:ocrScan 1.6s ease-in-out infinite alternate}
+@keyframes ocrScan{from{top:6%}to{top:92%}}
+#tab-ocr-review .ocr-scan-status{width:min(340px,96%);margin-top:14px;background:#fff;border:1px solid var(--o-navy);padding:12px 14px;text-align:center}
+#tab-ocr-review .ocr-scan-status h3{font-family:"Noto Serif TC",serif;font-weight:700;font-size:17px;color:var(--o-navy);margin:0 0 8px}
+#tab-ocr-review .ocr-bar{height:4px;background:var(--o-line);overflow:hidden}
+#tab-ocr-review .ocr-bar>div{height:100%;background:var(--o-navy);transition:width .3s}
+#tab-ocr-review .ocr-small{font-size:12px;color:var(--o-grey);margin-top:6px}
+#tab-ocr-review .ocr-queue{margin-top:12px}
+#tab-ocr-review .ocr-queue__head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+#tab-ocr-review .ocr-queue__head h3{font-family:"Noto Serif TC",serif;font-weight:700;font-size:15px;color:var(--o-navy);margin:0}
+#tab-ocr-review .ocr-queue__list{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+#tab-ocr-review .ocr-qitem{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--o-line2);padding:8px;text-align:left;cursor:pointer;min-width:0;width:100%}
+#tab-ocr-review .ocr-qitem.is-current{border-color:var(--o-navy);box-shadow:inset 3px 0 0 var(--o-gold)}
+#tab-ocr-review .ocr-qthumb{width:32px;height:42px;flex:0 0 32px;background:#F3EFE6;border:1px solid var(--o-line2);position:relative;overflow:hidden}
+#tab-ocr-review .ocr-qthumb::before{content:"";position:absolute;left:5px;right:5px;top:7px;height:2px;background:#C9C3B6;box-shadow:0 6px 0 #C9C3B6,0 12px 0 #C9C3B6,0 18px 0 #C9C3B6}
+#tab-ocr-review .ocr-qthumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#tab-ocr-review .ocr-qmeta{flex:1 1 auto;min-width:0}
+#tab-ocr-review .ocr-qname{font-weight:700;font-size:13px;color:var(--o-navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#tab-ocr-review .ocr-qfile{font-size:11px;color:var(--o-grey);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#tab-ocr-review .ocr-qs{flex:0 0 auto;font-size:11px;font-weight:700;padding:2px 6px;white-space:nowrap}
+#tab-ocr-review .ocr-qs[data-s="processing"]{color:var(--o-gold-text);background:var(--o-warn-bg);border:1px solid var(--o-warn-line)}
+#tab-ocr-review .ocr-qs[data-s="review"]{color:var(--o-navy);background:#EEF2F8;border:1px solid #D5DEEB}
+#tab-ocr-review .ocr-qs[data-s="written"]{color:var(--o-ok);background:#EAF3EE;border:1px solid #C5D9CC}
+#tab-ocr-review .ocr-upload{display:flex;align-items:center;justify-content:center;gap:6px;min-height:58px;border:1px dashed var(--o-navy);background:transparent;color:var(--o-navy);font-size:13px;font-weight:700;cursor:pointer;padding:8px}
+#tab-ocr-review .ocr-card{background:#fff;border:1px solid var(--o-line2);box-shadow:0 8px 28px rgba(15,26,46,.07)}
+#tab-ocr-review .ocr-prog{padding:12px 16px 10px;border-bottom:1px solid var(--o-line)}
+#tab-ocr-review .ocr-prog__top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+#tab-ocr-review .ocr-prog__top strong{font-family:"Noto Serif TC",serif;font-size:18px;color:var(--o-navy)}
+#tab-ocr-review .ocr-group{padding:10px 16px 4px}
+#tab-ocr-review .ocr-group h4{font-family:"Noto Serif TC",serif;font-weight:700;font-size:15px;color:var(--o-navy);margin:0 0 8px;display:flex;align-items:center;gap:10px}
+#tab-ocr-review .ocr-group h4::after{content:"";flex:1 1 auto;height:1px;background:var(--o-gold);opacity:.85}
+#tab-ocr-review .ocr-field{display:grid;grid-template-columns:22px 112px minmax(0,1fr) 58px 70px;grid-template-areas:"idx lab inp st btn";align-items:center;gap:8px;padding:6px 8px;margin:0 -4px 4px;border:1px solid transparent;min-height:44px;cursor:pointer}
+#tab-ocr-review .ocr-idx{grid-area:idx;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--o-grey);border:1px solid var(--o-line2);background:#fff}
+#tab-ocr-review .ocr-lab{grid-area:lab;font-size:15px;display:flex;align-items:center;gap:4px;white-space:nowrap}
+#tab-ocr-review .ocr-req{font-size:11px;font-weight:700;color:var(--o-gold-text);border:1px solid var(--o-warn-line);background:var(--o-warn-bg);padding:0 4px;line-height:16px}
+#tab-ocr-review .ocr-inp{grid-area:inp;width:100%;min-width:0;height:36px;padding:0 10px;border:1px solid var(--o-field);background:#fff;color:var(--o-text);font-size:15px;border-radius:0}
+#tab-ocr-review .ocr-inp:focus{outline:2px solid var(--o-navy);outline-offset:0}
+#tab-ocr-review .ocr-st{grid-area:st;justify-self:end;font-size:12px;font-weight:700;padding:2px 7px;white-space:nowrap}
+#tab-ocr-review .ocr-ok{grid-area:btn;height:32px;padding:0 8px;background:#fff;border:1px solid var(--o-navy);color:var(--o-navy);font-size:13px;font-weight:700;white-space:nowrap;cursor:pointer}
+#tab-ocr-review .ocr-field[data-c="low"]:not([data-ok="1"]){background:var(--o-warn-bg)}
+#tab-ocr-review .ocr-field[data-c="low"]:not([data-ok="1"]) .ocr-inp{background:#FFFDF8;border-color:var(--o-warn-line)}
+#tab-ocr-review .ocr-field[data-c="none"]:not([data-ok="1"]) .ocr-inp{background:var(--o-mute);border-style:dashed}
+#tab-ocr-review .ocr-field .ocr-st{color:var(--o-gold-text);background:var(--o-warn-bg);border:1px solid var(--o-warn-line)}
+#tab-ocr-review .ocr-field[data-c="none"] .ocr-st{color:var(--o-grey);background:var(--o-mute);border-color:var(--o-line2)}
+#tab-ocr-review .ocr-field[data-ok="1"] .ocr-st{color:var(--o-ok);background:#EAF3EE;border-color:#C5D9CC}
+#tab-ocr-review .ocr-field[data-ok="1"] .ocr-ok{visibility:hidden}
+#tab-ocr-review .ocr-field[data-ok="1"] .ocr-inp{border-color:#C5D9CC}
+#tab-ocr-review .ocr-field.is-sel{border-color:var(--o-navy);box-shadow:inset 3px 0 0 var(--o-gold),0 0 0 1px var(--o-navy);background:#fff}
+#tab-ocr-review .ocr-field.is-sel .ocr-idx{background:var(--o-navy);color:#fff;border-color:var(--o-navy)}
+#tab-ocr-review .ocr-wait{padding:28px 20px;text-align:center;color:var(--o-grey)}
+#tab-ocr-review .ocr-wait h3{font-family:"Noto Serif TC",serif;font-weight:700;font-size:18px;color:var(--o-navy);margin:0 0 6px}
+#tab-ocr-review .ocr-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 20px;border-top:1px solid var(--o-line);background:#fff}
+#tab-ocr-review .ocr-actions__note{flex:1 1 320px;max-width:none;font-size:13px;color:var(--o-grey);line-height:1.55}
+#tab-ocr-review .ocr-actions__note strong{color:var(--o-gold-text)}
+#tab-ocr-review .ocr-actions__btns{display:flex;gap:10px;align-items:center;margin-left:auto;flex-wrap:wrap;justify-content:flex-end}
+#tab-ocr-review .ocr-btn{height:40px;padding:0 18px;font-size:15px;font-weight:700;border:1px solid var(--o-navy);background:#fff;color:var(--o-navy);cursor:pointer;white-space:nowrap}
+#tab-ocr-review .ocr-btn--primary{background:var(--o-navy);color:#fff;min-width:140px}
+#tab-ocr-review .ocr-btn--primary:disabled{opacity:.4;cursor:not-allowed}
+#tab-ocr-review .ocr-btn--link{border:0;background:none;padding:0 6px}
+#tab-ocr-review .ocr-done{margin:0 16px 12px;padding:10px 12px;background:#EAF3EE;border:1px solid #C5D9CC;color:var(--o-ok);font-size:13px;line-height:1.6}
+@media (max-width:1100px){
+  #tab-ocr-review .ocr-work{flex-direction:column;align-items:stretch}
+  #tab-ocr-review .ocr-viewer,#tab-ocr-review .ocr-panel{flex:0 0 auto;width:100%;padding:12px 16px}
+  #tab-ocr-review .ocr-stage{max-height:none}
+  #tab-ocr-review .ocr-doc-wrap{width:min(600px,100%)}
+}
+@media (max-width:560px){
+  #tab-ocr-review .ocr-top,#tab-ocr-review .ocr-meta,#tab-ocr-review .ocr-demo-note,#tab-ocr-review .ocr-actions{padding-left:12px;padding-right:12px}
+  #tab-ocr-review .ocr-viewer,#tab-ocr-review .ocr-panel{padding:10px 8px}
+  #tab-ocr-review .ocr-stage{padding:12px 6px}
+  #tab-ocr-review .ocr-doc__inner{padding:14px 12px 12px}
+  #tab-ocr-review .ocr-doc__wm span{font-size:34px}
+  #tab-ocr-review .ocr-grid{font-size:11px}
+  #tab-ocr-review .ocr-group{padding:10px 10px 4px}
+  #tab-ocr-review .ocr-field{grid-template-columns:22px minmax(0,1fr) auto;grid-template-areas:"idx lab st" "inp inp btn";row-gap:6px}
+  #tab-ocr-review .ocr-ok{height:36px}
+  #tab-ocr-review .ocr-meta__muted{margin-left:0;width:100%}
+  #tab-ocr-review .ocr-actions__btns{width:100%;justify-content:stretch}
+  #tab-ocr-review .ocr-actions__btns .ocr-btn{flex:1 1 auto;padding:0 10px}
+  #tab-ocr-review .ocr-actions__btns .ocr-btn--primary{flex-basis:100%}
+  #tab-ocr-review .ocr-queue__list{grid-template-columns:1fr}
+}
+@media (max-width:560px){#tab-ocr-review .ocr-meta__sep{display:none}}
+</style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
@@ -1999,7 +2140,7 @@ body.wah-rpt-printing .rpt-footer,
             </div>
         </div>
 
-        <!-- 11 個功能分頁：電腦版左側欄（分四組）、手機版漢堡選單 -->
+        <!-- 12 個功能分頁：電腦版左側欄（分四組）、手機版漢堡選單 -->
         <div class="wah-sx" id="wah-tabbar-wrap"><button type="button" class="wah-drawer-close" aria-label="關閉選單" onclick="wahToggleDrawer()"><span class="material-icons" aria-hidden="true">close</span></button><div class="wah-side-brand"><div class="hg-brand" role="img" aria-label="世承家族財富顧問 Heritage Gate Wealth Advisory 標誌"><span data-wah-logo="horizontal" class="wah-logo hg-hz"></span></div></div><div id="wah-tabbar" class="wah-sx-scroll overflow-x-auto">
             <nav id="wah-tabs" class="flex min-w-max" aria-label="功能分頁">
                 <div class="wah-nav-grp" role="presentation">客戶</div>
@@ -2011,6 +2152,9 @@ body.wah-rpt-printing .rpt-footer,
                 </button>
                 <button onclick="switchTab('tab-kyc-dispatch')" id="btn-tab-kyc-dispatch" title="客戶數位盤點表派發" class="tab-btn transition-all">
                     <span class="material-icons" aria-hidden="true">send_to_mobile</span><span class="wah-tab-txt">客戶盤點</span>
+                </button>
+                <button onclick="switchTab('tab-ocr-review')" id="btn-tab-ocr-review" title="文件辨識・待確認（示範）" class="tab-btn transition-all">
+                    <span class="material-icons" aria-hidden="true"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" style="display:block"><path d="M7 3H4v3H2V1h5v2zm15 3V1h-5v2h3v3h2zM7 21H4v-3H2v5h5v-2zm13-3v3h-3v2h5v-5h-2zM17 6H7v12h10V6zm2 12c0 1.1-.9 2-2 2H7c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2v12zM15 8H9v2h6V8zm0 3H9v2h6v-2zm0 3H9v2h6v-2z"/></svg></span><span class="wah-tab-txt">文件辨識</span>
                 </button>
                 <div class="wah-nav-grp" role="presentation">規劃分析</div>
                 <button onclick="switchTab('tab-advisory')" id="btn-tab-advisory" title="顧問建議（CPA × CFP × 地政士處方箋）" class="tab-btn transition-all">
@@ -3352,6 +3496,11 @@ body.wah-rpt-printing .rpt-footer,
             <div id="wah-rpt-toolbar" class="rpt-toolbar no-print"></div>
             <div id="wah-rpt-root"></div>
         </section>
+        <!-- ==================== TAB: 文件辨識・待確認（示範版：不連線辨識服務，示範結果；照片只在本機） ==================== -->
+        <section id="tab-ocr-review" class="tab-content hidden">
+            <div id="ocr-root"></div>
+        </section>
+
         <!-- ==================== TAB: 遺囑樣本產生器（教育性參考工具；狀態僅存記憶體） ==================== -->
         <section id="tab-willgen" class="tab-content hidden space-y-4">
             <div class="hub-card p-5 border-l-4 border-l-[#B8935A]">
@@ -12030,5 +12179,308 @@ ${runPrescriptionRules(c, act, { docList: (typeof getClientDocList === 'function
 
 </script>
 <div id="wah-rpt-print-host"></div>
+<script id="wah-ocr-demo-js">
+/* ===== 文件辨識・待確認（示範版專用）=====
+   示範模式：不呼叫任何雲端或內網辨識服務；欄位為預先準備的示範結果。
+   上傳的照片只在本機瀏覽器顯示（Object URL），不上傳、不存檔；審查狀態只存於本頁記憶體。 */
+(function () {
+  'use strict';
+  var FIELDS = [
+    { g: '保單基本', k: 'policyNo', l: '保單號碼', row: '保險單號碼' },
+    { g: '保單基本', k: 'insurer', l: '保險公司', row: '保險公司' },
+    { g: '保單基本', k: 'productType', l: '商品類型', row: '商品類型' },
+    { g: '保單基本', k: 'effectiveDate', l: '生效日', row: '契約生效日' },
+    { g: '當事人', k: 'policyholder', l: '要保人', row: '要保人', req: 1 },
+    { g: '當事人', k: 'insured', l: '被保險人', row: '被保險人' },
+    { g: '當事人', k: 'beneficiary', l: '身故受益人', row: '身故受益人', req: 1 },
+    { g: '保障', k: 'sumAssured', l: '保額', row: '保險金額', req: 1, money: 1 },
+    { g: '保障', k: 'annualPremium', l: '年繳保費', row: '年繳保險費', money: 1 },
+    { g: '保障', k: 'paymentYears', l: '繳費年期', row: '繳費年期' },
+    { g: '保障', k: 'currency', l: '幣別', row: '幣別' },
+    { g: '保障', k: 'paymentMode', l: '繳費方式', row: '繳費方式' },
+    { g: '給付', k: 'dailyBenefit', l: '日額', row: null, money: 1 },
+    { g: '給付', k: 'monthlyBenefit', l: '月給付', row: null, money: 1 }
+  ];
+  var LOW = { sumAssured: 1, beneficiary: 1, annualPremium: 1 };
+  var TYPE_NAME = { life: '定期壽險', savings: '還本終身壽險', investment: '投資型壽險', medical: '醫療險', annuity: '年金保險', critical: '重大疾病險', ltc: '長期照顧保險', disability: '失能保險', accident: '傷害保險', other: '其他保險' };
+  var DATES = ['2021-03-15', '2016-08-01', '2019-11-20', '2014-05-06', '2022-09-30'];
+  var YEARS = { life: '20 年', savings: '6 年', investment: '躉繳', medical: '20 年', annuity: '10 年' };
+  var RATE = { life: 0.00486, savings: 0.162, investment: 1, medical: 0, annuity: 0.1 };
+  var S = { clientId: undefined, docs: [], cur: 0, sel: 'sumAssured', zoom: 1, rot: 0, upN: 0, msg: '' };
+
+  function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]; }); }
+  function money(n) { n = Math.round(Number(n) || 0); return n ? n.toLocaleString('en-US') : ''; }
+  function num(s) { return Number(String(s || '').replace(/[^\d.]/g, '')) || 0; }
+  function client() { try { return typeof getActiveClient === 'function' ? getActiveClient() : null; } catch (e) { return null; } }
+  function toast(m, err) { if (typeof showToast === 'function') showToast(m, err); }
+  function nowStr() { var d = new Date(); function p(x) { return (x < 10 ? '0' : '') + x; } return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()); }
+
+  function valuesFor(ins, i, c) {
+    var t = ins.insType || 'life', sum = Number(ins.taxVal) || 0;
+    var prem = t === 'medical' ? 12000 : Math.round(sum * (RATE[t] == null ? 0.01 : RATE[t]) / 100) * 100;
+    var ben = ins.beneficiary || '法定繼承人';
+    return {
+      policyNo: '示範-' + (110 + i) + '-' + String(8472 + i * 1371).padStart(6, '0'),
+      insurer: '示範人壽',
+      productType: TYPE_NAME[t] || '人壽保險',
+      effectiveDate: DATES[i % DATES.length],
+      policyholder: ins.owner || (c && c.deceasedName) || '',
+      insured: ins.insured || (c && c.deceasedName) || '',
+      beneficiary: ben,
+      sumAssured: money(sum),
+      annualPremium: money(prem),
+      paymentYears: YEARS[t] || '20 年',
+      currency: '新臺幣',
+      paymentMode: t === 'investment' ? '躉繳' : '年繳',
+      dailyBenefit: t === 'medical' ? '2,000' : '',
+      monthlyBenefit: ''
+    };
+  }
+  function makeDoc(kind, values, extra) {
+    var d = { kind: kind, values: values, orig: JSON.parse(JSON.stringify(values)), conf: {}, ok: {}, status: 'processing', at: nowStr() };
+    FIELDS.forEach(function (f) {
+      var v = values[f.k];
+      d.conf[f.k] = !v ? 'none' : (kind === 'upload' || LOW[f.k]) ? 'low' : 'high';
+      d.ok[f.k] = d.conf[f.k] === 'high' && !f.req;
+    });
+    for (var k in extra) d[k] = extra[k];
+    return d;
+  }
+  function buildDocs() {
+    var c = client();
+    S.clientId = c ? c.id : null; S.cur = 0; S.sel = 'sumAssured'; S.zoom = 1; S.rot = 0; S.msg = '';
+    S.docs.forEach(function (d) { clearInterval(d.timer); if (d.src) try { URL.revokeObjectURL(d.src); } catch (e) { } });
+    S.docs = [];
+    var list = c ? (c.insurance || []) : [];
+    var picked = [];
+    list.forEach(function (ins, idx) { if (picked.length < 3 && ins && (Number(ins.taxVal) || 0) > 0) picked.push(idx); });
+    if (!picked.length) {
+      var heir = c && (c.heirs || []).find(function (h) { return h.relation === 'spouse' || h.relation === 'descendant'; });
+      var nm = (c && c.deceasedName) || '示範客戶';
+      var v = valuesFor({ insType: 'life', owner: nm, insured: nm, beneficiary: heir ? heir.name : '法定繼承人', taxVal: 5000000 }, 0, c);
+      S.docs.push(makeDoc('sample', v, { label: '保單內頁 1', file: 'IMG_2046.jpg', size: '2.1 MB', insIndex: null }));
+    } else {
+      picked.forEach(function (idx, i) {
+        S.docs.push(makeDoc('sample', valuesFor(list[idx], i, c), { label: '保單內頁 ' + (i + 1), file: 'IMG_' + (2046 + i * 2) + '.jpg', size: (2.1 + i * 0.3).toFixed(1) + ' MB', insIndex: idx }));
+      });
+    }
+  }
+  function doc() { return S.docs[S.cur]; }
+  function count(d) { var n = 0; FIELDS.forEach(function (f) { if (d.ok[f.k]) n++; }); return n; }
+  function fieldNo(k) { for (var i = 0; i < FIELDS.length; i++) if (FIELDS[i].k === k) return i + 1; return 0; }
+
+  function startProcessing(d, extra) {
+    d.status = 'processing'; d.t0 = Date.now();
+    clearInterval(d.timer);
+    var total = 2600 + (extra || 0);
+    d.timer = setInterval(function () {
+      var p = Math.min(1, (Date.now() - d.t0) / total);
+      if (doc() === d) {
+        var el = document.getElementById('ocr-scan-fill'), lab = document.getElementById('ocr-scan-lab');
+        if (el) el.style.width = Math.round(p * 100) + '%';
+        if (lab) lab.textContent = '已用 ' + Math.ceil((Date.now() - d.t0) / 1000) + ' 秒／約 ' + Math.round(total / 1000) + ' 秒（示範）';
+      }
+      if (p >= 1) { clearInterval(d.timer); d.timer = null; d.status = 'review'; render(); }
+    }, 200);
+  }
+  function ensureRunning(d) { if (d && d.status === 'processing' && !d.timer) startProcessing(d); }
+
+  function docHtml(d) {
+    if (d.kind === 'upload') return '<img class="ocr-photo" src="' + esc(d.src) + '" alt="上傳的文件照片（僅於本機顯示）">';
+    var v = d.values, rows = FIELDS.filter(function (f) { return f.row; });
+    var sel = S.sel, selF = FIELDS[fieldNo(sel) - 1];
+    var tr = rows.map(function (f) {
+      var val = d.orig[f.k] || '—';
+      if (f.k === 'sumAssured' || f.k === 'annualPremium') val = val === '—' ? val : '新臺幣 ' + val + ' 元整';
+      if (f.k === 'beneficiary' && d.orig.beneficiary !== '法定繼承人') val += '（指定，100%）';
+      if (f.k === 'productType') val = d.orig.productType;
+      var hot = d.status === 'review' && f.k === sel;
+      return '<tr data-f="' + f.k + '"' + (hot ? ' class="is-hot"' : '') + '><th>' + esc(f.row) + '</th><td>' + esc(val) + (hot ? '<span class="ocr-badge">' + fieldNo(f.k) + '</span>' : '') + '</td></tr>';
+    }).join('');
+    var benHot = d.status === 'review' && selF && !selF.row;
+    var note = d.orig.dailyBenefit ? '本契約附加住院日額 新臺幣 ' + d.orig.dailyBenefit + ' 元；未約定失能月給付。' : '本契約為主約，未約定住院日額或失能月給付。保險金額以契約所載為準。';
+    return '<article class="ocr-doc" aria-label="示範保單內頁（虛構）"><div class="ocr-doc__wm" aria-hidden="true"><span>示範樣本</span></div><div class="ocr-doc__inner">' +
+      '<div class="ocr-doc__brand"><svg viewBox="0 0 46 46" aria-hidden="true"><circle cx="23" cy="23" r="21.5" fill="none" stroke="#1B2B4B" stroke-width="1.2"/><circle cx="23" cy="23" r="18.5" fill="none" stroke="#B8935A" stroke-width="1"/><circle cx="23" cy="23" r="16.5" fill="none" stroke="#1B2B4B" stroke-width=".6"/><text x="23" y="28" text-anchor="middle" fill="#1B2B4B" font-size="16" font-weight="700">示</text></svg>' +
+      '<div><div class="ocr-doc__co">示範人壽保險股份有限公司</div><div class="ocr-doc__en">Shi Fan Life Insurance Co., Ltd. · Demo only</div></div></div>' +
+      '<hr class="ocr-doc__rule"><h3 class="ocr-doc__h">保險單</h3><div class="ocr-doc__hs">契 約 內 頁</div><div class="ocr-doc__notice">【虛構示範文件，非正式保單，僅供系統介面示意】</div>' +
+      '<table class="ocr-grid"><tbody>' + tr + '</tbody></table>' +
+      '<div class="ocr-doc__note' + (benHot ? ' is-hot' : '') + '" data-f="benefits">' + esc(note) + (benHot ? '<span class="ocr-badge">' + fieldNo(sel) + '</span>' : '') + '</div>' +
+      '<div class="ocr-doc__foot">示範樣本 · 非正式保單 · 不得據以主張任何權利</div></div></article>';
+  }
+
+  function fieldRow(d, f, i) {
+    var ok = d.ok[f.k], c = d.conf[f.k];
+    var st = ok ? '已確認' : c === 'none' && !d.values[f.k] ? '待填' : '請確認';
+    return '<div class="ocr-field' + (S.sel === f.k ? ' is-sel' : '') + '" data-k="' + f.k + '" data-c="' + c + '" data-ok="' + (ok ? 1 : 0) + '">' +
+      '<span class="ocr-idx">' + (i + 1) + '</span>' +
+      '<label class="ocr-lab" for="ocr-f-' + f.k + '">' + esc(f.l) + (f.req ? '<span class="ocr-req">必核</span>' : '') + '</label>' +
+      '<input class="ocr-inp" id="ocr-f-' + f.k + '" data-k="' + f.k + '" value="' + esc(d.values[f.k]) + '" placeholder="待填"' + (f.money ? ' inputmode="numeric"' : '') + '>' +
+      '<span class="ocr-st">' + st + '</span>' +
+      '<button type="button" class="ocr-ok" data-act="ok" data-k="' + f.k + '">✓ 確認</button></div>';
+  }
+
+  function render() {
+    var root = document.getElementById('ocr-root');
+    if (!root) return;
+    var c = client();
+    if ((c ? c.id : null) !== S.clientId || !S.docs.length) { buildDocs(); S.docs.forEach(function (x, i) { startProcessing(x, i * 1800); }); }
+    var d = doc();
+    ensureRunning(d);
+    var proc = d.status === 'processing';
+    var n = count(d), total = FIELDS.length;
+    var groups = [], html = '';
+    FIELDS.forEach(function (f, i) {
+      if (groups.indexOf(f.g) < 0) { if (groups.length) html += '</div>'; groups.push(f.g); html += '<div class="ocr-group"><h4>' + f.g + '</h4>'; }
+      html += fieldRow(d, f, i);
+    });
+    html += '</div>';
+    var queue = S.docs.map(function (x, i) {
+      var st = { processing: '辨識中', review: '待確認', written: '已寫入' }[x.status];
+      return '<button type="button" class="ocr-qitem' + (i === S.cur ? ' is-current' : '') + '" data-act="open" data-i="' + i + '"><span class="ocr-qthumb">' + (x.kind === 'upload' ? '<img src="' + esc(x.src) + '" alt="">' : '') + '</span><span class="ocr-qmeta"><span class="ocr-qname" style="display:block">' + esc(x.label) + '</span><span class="ocr-qfile" style="display:block">' + esc(x.file) + '</span></span><span class="ocr-qs" data-s="' + x.status + '">' + st + '</span></button>';
+    }).join('');
+    var tf = 'transform:scale(' + S.zoom + ') rotate(' + S.rot + 'deg)';
+    root.innerHTML =
+      '<div class="ocr-shell">' +
+      '<div class="ocr-top"><div class="ocr-top__main"><div class="ocr-kicker">Internal · Document review</div><h2 class="ocr-title">文件辨識・' + (proc ? '辨識中' : '待確認') + '</h2></div>' +
+      '<div class="ocr-tags"><span class="ocr-tag"><i></i>辨識引擎：<b>示範（未連線）</b></span><span class="ocr-tag ocr-tag--bg">含客戶個資・處理方式依公司設定</span></div></div>' +
+      '<div class="ocr-demo-note"><strong>示範模式，未進行實際辨識。</strong>本頁不連線任何雲端或內網辨識服務；欄位為預先準備的示範結果。' + (d.kind === 'upload' ? '你上傳的照片只在這台裝置的瀏覽器顯示，不會上傳或存檔；右側欄位<strong>不是</strong>從照片讀出，請對照照片逐欄修改後再確認。' : '左側為虛構的示範保單，可點「上傳下一頁」試用自己的照片（只在本機顯示）。') + '</div>' +
+      '<div class="ocr-meta"><button type="button" class="ocr-link" data-act="back">← 返回客戶資料</button><span class="ocr-meta__sep"></span><span>客戶 <strong>' + esc(c ? c.deceasedName : '（尚未選擇）') + '</strong></span><span class="ocr-meta__sep"></span><span>文件類型 <strong>保單內頁</strong></span><span class="ocr-meta__muted">上傳於 ' + esc(d.at) + '</span></div>' +
+      '<div class="ocr-work"><section class="ocr-viewer">' +
+      '<div class="ocr-toolbar"><span class="ocr-toolbar__file">' + esc(d.file) + '　' + esc(d.size) + '</span>' +
+      '<button type="button" class="ocr-tool" data-act="zoom-out">－ 縮小</button><span class="ocr-zoom">' + Math.round(S.zoom * 100) + '%</span><button type="button" class="ocr-tool" data-act="zoom-in">＋ 放大</button><button type="button" class="ocr-tool" data-act="rotate">↻ 旋轉</button><button type="button" class="ocr-tool" data-act="reset">重設</button></div>' +
+      '<div class="ocr-stage"><div class="ocr-doc-wrap" style="' + tf + '">' + docHtml(d) + (proc ? '<div class="ocr-scan" aria-hidden="true"><div class="ocr-scan__veil"></div><div class="ocr-scan__line"></div></div>' : '') + '</div>' +
+      (proc ? '<div class="ocr-scan-status"><h3>辨識中…約 3 秒（示範）</h3><div class="ocr-bar"><div id="ocr-scan-fill" style="width:0%"></div></div><div class="ocr-small" id="ocr-scan-lab">已用 0 秒／約 3 秒（示範）</div></div>' : '') + '</div>' +
+      '<div class="ocr-queue"><div class="ocr-queue__head"><h3>文件佇列</h3><span class="ocr-small">' + S.docs.length + ' 頁</span></div><div class="ocr-queue__list">' + queue +
+      '<label class="ocr-upload"><input type="file" accept="image/*" id="ocr-file" hidden>＋ 上傳下一頁</label></div></div>' +
+      '</section><section class="ocr-panel"><div class="ocr-card">' +
+      (proc ? '<div class="ocr-wait"><h3>欄位將於辨識完成後顯示</h3><div>可同時上傳下一頁；辨識結果一律先進入「待確認」，不會直接寫入客戶資料。</div></div>' :
+        '<div class="ocr-prog"><div class="ocr-prog__top"><div>已確認 <strong id="ocr-count">' + n + '／' + total + '</strong></div><div class="ocr-small" style="margin:0">關鍵欄位須逐筆按確認</div></div><div class="ocr-bar"><div id="ocr-count-fill" style="width:' + (n / total * 100) + '%"></div></div></div>' +
+        (d.status === 'written' ? '<div class="ocr-done" style="margin-top:12px">' + esc(S.msg || '本頁已寫入客戶資料。') + '</div>' : '') + html) +
+      '</div></section></div>' +
+      '<div class="ocr-actions"><div class="ocr-actions__note">關鍵欄位（<strong>保額、要保人、身故受益人</strong>）須由顧問逐筆按「確認」後，才能寫入客戶資料。辨識結果只供核對，不會自動存檔。</div>' +
+      '<div class="ocr-actions__btns"><button type="button" class="ocr-btn ocr-btn--link" data-act="reprocess"' + (proc ? ' disabled' : '') + '>重新辨識</button><button type="button" class="ocr-btn" data-act="draft"' + (proc ? ' disabled' : '') + '>儲存草稿</button><button type="button" class="ocr-btn ocr-btn--primary" id="ocr-commit" data-act="commit"' + (proc || n < total ? ' disabled' : '') + '>' + (d.status === 'written' ? '再次寫入' : '寫入客戶資料') + '</button></div></div>' +
+      '</div>';
+  }
+
+  function refreshRow(k) {
+    var d = doc(), row = document.querySelector('#ocr-root .ocr-field[data-k="' + k + '"]');
+    if (row) {
+      row.setAttribute('data-ok', d.ok[k] ? 1 : 0);
+      row.querySelector('.ocr-st').textContent = d.ok[k] ? '已確認' : (d.conf[k] === 'none' && !d.values[k] ? '待填' : '請確認');
+    }
+    var n = count(d), total = FIELDS.length;
+    var a = document.getElementById('ocr-count'), b = document.getElementById('ocr-count-fill'), btn = document.getElementById('ocr-commit');
+    if (a) a.textContent = n + '／' + total;
+    if (b) b.style.width = (n / total * 100) + '%';
+    if (btn) btn.disabled = n < total;
+  }
+  function select(k) {
+    if (S.sel === k) return;
+    S.sel = k;
+    var d = doc();
+    document.querySelectorAll('#ocr-root .ocr-field').forEach(function (r) { r.classList.toggle('is-sel', r.getAttribute('data-k') === k); });
+    if (d.kind === 'sample') {
+      var wrap = document.querySelector('#ocr-root .ocr-doc-wrap');
+      if (wrap) { var scan = wrap.querySelector('.ocr-scan'); wrap.innerHTML = docHtml(d); if (scan) wrap.appendChild(scan); }
+    }
+  }
+
+  function mapType(t) {
+    t = String(t || '');
+    if (/投資/.test(t)) return 'investment';
+    if (/還本|儲蓄/.test(t)) return 'savings';
+    if (/醫療/.test(t)) return 'medical';
+    if (/年金/.test(t)) return 'annuity';
+    if (/重大|重疾/.test(t)) return 'critical';
+    if (/長照|長期照顧/.test(t)) return 'ltc';
+    if (/失能/.test(t)) return 'disability';
+    if (/意外|傷害/.test(t)) return 'accident';
+    if (/壽/.test(t)) return 'life';
+    return 'other';
+  }
+  function commit() {
+    var d = doc(), c = client();
+    if (!c) { toast('尚無客戶案卷，請先新增或選擇客戶', true); return; }
+    if (count(d) < FIELDS.length) { toast('還有欄位尚未確認', true); return; }
+    var v = d.values;
+    if (!num(v.sumAssured)) { toast('保額需為數字，請修正後再確認', true); return; }
+    c.insurance = Array.isArray(c.insurance) ? c.insurance : [];
+    var idx = -1;
+    c.insurance.forEach(function (p, i) { if (idx < 0 && p && p.ocr && p.ocr.policyNo === v.policyNo) idx = i; });
+    if (idx < 0 && d.kind === 'sample' && d.insIndex != null && c.insurance[d.insIndex] && !(c.insurance[d.insIndex].ocr)) idx = d.insIndex;
+    var ben = String(v.beneficiary || '').replace(/（[^）]*）|\([^)]*\)/g, '').trim();
+    var ocr = { policyNo: v.policyNo, insurer: v.insurer, productType: v.productType, effectiveDate: v.effectiveDate, annualPremium: num(v.annualPremium), paymentYears: v.paymentYears, currency: v.currency, paymentMode: v.paymentMode, dailyBenefit: num(v.dailyBenefit), monthlyBenefit: num(v.monthlyBenefit), confirmedAt: nowStr(), source: d.kind === 'upload' ? '示範模式（上傳照片，未實際辨識）' : '示範模式（示範文件）' };
+    var p, isNew = idx < 0;
+    if (isNew) { p = { name: (v.productType || '保單') + '（' + (v.insurer || '示範') + '）', insType: mapType(v.productType) }; c.insurance.push(p); }
+    else p = c.insurance[idx];
+    p.owner = v.policyholder; p.insured = v.insured; p.beneficiary = ben; p.taxVal = num(v.sumAssured); p.ocr = ocr;
+    try { if (typeof saveClientsDb === 'function') saveClientsDb(); } catch (e) { }
+    try { if (typeof loadClientIntoEditor === 'function') loadClientIntoEditor(); } catch (e) { }
+    try { if (typeof recalculateAndRenderAll === 'function') recalculateAndRenderAll(); } catch (e) { }
+    d.status = 'written';
+    S.msg = (isNew ? '已新增一筆保單到「' : '已更新「') + c.deceasedName + '」的保險：' + p.name + '（保額 ' + money(p.taxVal) + ' 元）。可到「客戶資料」查看。';
+    toast(S.msg);
+    render();
+  }
+
+  function onUpload(file) {
+    if (!file) return;
+    if (!/^image\//.test(file.type)) { toast('請選擇圖片檔（JPG、PNG、HEIC 等）', true); return; }
+    var c = client();
+    var nm = (c && c.deceasedName) || '示範客戶';
+    var heir = c && (c.heirs || []).find(function (h) { return h.relation === 'spouse' || h.relation === 'descendant'; });
+    S.upN++;
+    var v = valuesFor({ insType: 'life', owner: nm, insured: nm, beneficiary: heir ? heir.name : '法定繼承人', taxVal: 3000000 }, 2 + S.upN, c);
+    v.policyNo = '示範-UP-' + String(S.upN).padStart(3, '0');
+    var d = makeDoc('upload', v, { label: '上傳照片 ' + S.upN, file: file.name || 'photo.jpg', size: (file.size / 1048576).toFixed(1) + ' MB', src: URL.createObjectURL(file), insIndex: null });
+    S.docs.push(d); S.cur = S.docs.length - 1; S.zoom = 1; S.rot = 0; S.sel = 'sumAssured';
+    startProcessing(d); render();
+  }
+
+  function bind() {
+    var root = document.getElementById('ocr-root');
+    if (!root || root.__ocr) return;
+    root.__ocr = 1;
+    root.addEventListener('click', function (e) {
+      var a = e.target.closest('[data-act]');
+      var row = e.target.closest('.ocr-field');
+      if (row && !a) { select(row.getAttribute('data-k')); return; }
+      if (!a || a.disabled) return;
+      var act = a.getAttribute('data-act'), d = doc();
+      if (act === 'ok') { var k = a.getAttribute('data-k'); select(k); d.ok[k] = true; refreshRow(k); return; }
+      if (act === 'open') { var i = +a.getAttribute('data-i'); if (i !== S.cur) { S.cur = i; S.zoom = 1; S.rot = 0; S.msg = ''; render(); } return; }
+      if (act === 'zoom-in') S.zoom = Math.min(2.5, Math.round((S.zoom + 0.25) * 100) / 100);
+      else if (act === 'zoom-out') S.zoom = Math.max(0.5, Math.round((S.zoom - 0.25) * 100) / 100);
+      else if (act === 'rotate') S.rot = (S.rot + 90) % 360;
+      else if (act === 'reset') { S.zoom = 1; S.rot = 0; }
+      else if (act === 'back') { if (typeof switchTab === 'function') switchTab('tab-client-editor'); return; }
+      else if (act === 'draft') { toast('草稿已暫存在本頁（示範版：關閉或重新整理頁面即消失）'); return; }
+      else if (act === 'reprocess') {
+        d.values = JSON.parse(JSON.stringify(d.orig));
+        FIELDS.forEach(function (f) { d.ok[f.k] = d.conf[f.k] === 'high' && !f.req; });
+        startProcessing(d);
+      }
+      else if (act === 'commit') { commit(); return; }
+      render();
+    });
+    root.addEventListener('input', function (e) {
+      var t = e.target;
+      if (!t.classList || !t.classList.contains('ocr-inp')) return;
+      var k = t.getAttribute('data-k'), d = doc();
+      d.values[k] = t.value; d.ok[k] = false; refreshRow(k);
+    });
+    root.addEventListener('focusin', function (e) { var r = e.target.closest && e.target.closest('.ocr-field'); if (r) select(r.getAttribute('data-k')); });
+    root.addEventListener('change', function (e) { if (e.target.id === 'ocr-file') { onUpload(e.target.files && e.target.files[0]); e.target.value = ''; } });
+  }
+
+  window.wahOcrRender = function () { bind(); render(); };
+  var st = window.switchTab;
+  if (typeof st === 'function' && !st.__ocr) {
+    window.switchTab = function (id) { var r = st.apply(this, arguments); if (id === 'tab-ocr-review') { try { window.wahOcrRender(); } catch (e) { if (window.console) console.error(e); } } return r; };
+    for (var key in st) { try { window.switchTab[key] = st[key]; } catch (e) { } }
+    window.switchTab.__ocr = true;
+  }
+})();
+</script>
 </body>
 </html>
