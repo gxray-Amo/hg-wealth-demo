@@ -2043,6 +2043,28 @@ body.wah-rpt-printing .rpt-footer,
 }
 @media (max-width:560px){#tab-ocr-review .ocr-meta__sep{display:none}}
 </style>
+<style id="wah-demo-nodl-css">
+/* DEMO_NODL_V1: 示範版不提供下載／列印 */
+button[onclick*="downloadElementAsPng"], button[onclick*="downloadFullClientReportHtml"],
+button[onclick*="exportCurrentClientJson"], button[onclick*="downloadKycClientJson"],
+button[onclick*="submitKycToAdvisorEmail"], button[onclick*="finPlanDownload"],
+button[onclick*="finPlanPng"], button[onclick*="finPlanPrint"],
+button[onclick*="willgenDownloadTxt"], button[onclick*="willgenPrintPdf"],
+button[onclick*="wahDownloadFile"], button[onclick="window.print()"], #wah-rpt-print-btn {
+  opacity: .45 !important; cursor: not-allowed !important; filter: grayscale(.7);
+}
+.wah-nodl-note { margin-top: 8px; display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #7A5C2E; background: #FBF6EC; border: 1px solid #E8D9B8; border-radius: 10px; padding: 6px 10px; }
+#wah-nodl-modal { position: fixed; inset: 0; z-index: 200; background: rgba(15,26,46,.6); display: flex; align-items: center; justify-content: center; padding: 16px; }
+#wah-nodl-modal .box { background: #fff; border-radius: 16px; padding: 16px; max-width: min(92vw, 520px); max-height: 92vh; overflow: auto; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,.3); }
+#wah-nodl-modal img { width: 100%; height: auto; border: 1px solid #e2e8f0; border-radius: 8px; -webkit-user-drag: none; -webkit-touch-callout: none; user-select: none; }
+#wah-nodl-modal h3 { font-size: 14px; font-weight: 900; color: #1B2B4B; margin: 0 0 10px; }
+#wah-nodl-modal p { font-size: 12px; color: #64748b; margin: 10px 0; }
+#wah-nodl-modal button { padding: 8px 18px; border-radius: 10px; background: #1B2B4B; color: #fff; font-weight: 700; font-size: 13px; }
+@media print {
+  html body > * { display: none !important; }
+  html body::before { content: "示範版不提供列印或下載"; display: block !important; font: 700 20px/1.6 sans-serif; text-align: center; padding-top: 40vh; color: #1B2B4B; }
+}
+</style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
@@ -3522,7 +3544,8 @@ body.wah-rpt-printing .rpt-footer,
                     <span class="material-icons">download</span>
                     下載專區
                 </h2>
-                <p class="text-xs text-slate-500 mt-1">下載或預覽空白表單與參考文件，供內部顧問使用。單機開啟本頁亦可離線下載。</p>
+                <p class="text-xs text-slate-500 mt-1">預覽空白表單與參考文件，供內部顧問使用。</p>
+                <div class="wah-nodl-note">示範版不提供下載，可點「預覽」查看第 1 頁縮圖。</div>
             </div>
             <div id="wah-downloads-root"></div>
         </section>
@@ -12481,6 +12504,88 @@ ${runPrescriptionRules(c, act, { docList: (typeof getClientDocList === 'function
     for (var key in st) { try { window.switchTab[key] = st[key]; } catch (e) { } }
     window.switchTab.__ocr = true;
   }
+})();
+</script>
+<script id="wah-demo-nodl-js">
+/* DEMO_NODL_V1: 示範版關閉所有下載、匯出與列印（畫面上的檢視與預覽保留） */
+(function () {
+  'use strict';
+  var MSG = '示範版不提供下載';
+  var last = 0;
+  function notice(msg) {
+    var now = Date.now(); if (now - last < 400) return; last = now;
+    if (typeof showToast === 'function') showToast(msg || MSG); else alert(msg || MSG);
+  }
+  window.wahDemoNoDownload = notice;
+  function blocked() { notice(); return null; }
+
+  // 1) 底層出口：列印、<a download>/blob: 連結、開新分頁看檔案
+  window.print = function () { notice('示範版不提供列印或下載'); };
+  var aClick = HTMLAnchorElement.prototype.click;
+  function isFileLink(a) {
+    var h = (a.getAttribute && a.getAttribute('href')) || '';
+    return a.hasAttribute('download') || /^(blob|data):/i.test(h);
+  }
+  HTMLAnchorElement.prototype.click = function () { if (isFileLink(this)) { notice(); return; } return aClick.apply(this, arguments); };
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest && e.target.closest('a');
+    if (a && isFileLink(a)) { e.preventDefault(); e.stopImmediatePropagation(); notice(); }
+  }, true);
+  var wOpen = window.open;
+  window.open = function (url) {
+    var u = String(url || '');
+    if (/^(blob|data):/i.test(u) || /\.(pdf|json|xlsx|zip|png|txt|html?)(\?|#|$)/i.test(u)) { notice(); return null; }
+    return wOpen.apply(window, arguments);
+  };
+  document.addEventListener('keydown', function (e) {
+    var k = (e.key || '').toLowerCase();
+    if ((e.ctrlKey || e.metaKey) && (k === 'p' || k === 's')) { e.preventDefault(); e.stopPropagation(); notice('示範版不提供列印或下載'); }
+  }, true);
+
+  // 2) 各功能入口：直接改成提示（不產生任何檔案）
+  ['downloadElementAsPng', 'downloadFullClientReportHtml', 'exportCurrentClientJson', 'downloadKycClientJson',
+   'submitKycToAdvisorEmail', 'finPlanDownloadXlsx', 'finPlanDownloadBlank', 'finPlanPngAll', 'finPlanPng',
+   'finPlanPrint', 'wahDownloadBlob', 'willgenDownloadTxt', 'willgenPrintPdf', 'wahDownloadFile'
+  ].forEach(function (n) { try { window[n] = blocked; } catch (e) {} });
+
+  // 報告分頁的「列印／存成 PDF」按鈕（以 addEventListener 綁定）
+  document.addEventListener('click', function (e) {
+    var b = e.target && e.target.closest && e.target.closest('#wah-rpt-print-btn');
+    if (b) { e.preventDefault(); e.stopImmediatePropagation(); notice('示範版不提供列印或下載'); }
+  }, true);
+
+  // 3) 下載專區「預覽」：改為頁內縮圖預覽（不開啟 PDF 檔）
+  window.wahPreviewFile = function (id) {
+    var card = document.querySelector('.wah-dl-card[data-id="' + String(id).replace(/"/g, '') + '"]');
+    var img = card && card.querySelector('img.wah-dl-thumb');
+    var title = card && card.querySelector('.wah-dl-title');
+    var old = document.getElementById('wah-nodl-modal'); if (old) old.remove();
+    var m = document.createElement('div'); m.id = 'wah-nodl-modal'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true');
+    var box = document.createElement('div'); box.className = 'box';
+    var h = document.createElement('h3'); h.textContent = (title && title.textContent) || '預覽'; box.appendChild(h);
+    if (img) { var im = document.createElement('img'); im.src = img.src; im.alt = img.alt; im.draggable = false; im.addEventListener('contextmenu', function (e) { e.preventDefault(); }); box.appendChild(im); }
+    var p = document.createElement('p'); p.textContent = '示範版只提供第 1 頁縮圖預覽，不提供下載。'; box.appendChild(p);
+    var c = document.createElement('button'); c.type = 'button'; c.textContent = '關閉'; c.onclick = function () { m.remove(); }; box.appendChild(c);
+    m.appendChild(box); m.addEventListener('click', function (e) { if (e.target === m) m.remove(); });
+    document.body.appendChild(m); c.focus();
+  };
+
+  // 4) 標示已停用的按鈕（含之後才產生的按鈕）
+  var SEL = 'button[onclick*="downloadElementAsPng"],button[onclick*="downloadFullClientReportHtml"],button[onclick*="exportCurrentClientJson"],'
+    + 'button[onclick*="downloadKycClientJson"],button[onclick*="submitKycToAdvisorEmail"],button[onclick*="finPlanDownload"],'
+    + 'button[onclick*="finPlanPng"],button[onclick*="finPlanPrint"],button[onclick*="willgenDownloadTxt"],button[onclick*="willgenPrintPdf"],'
+    + 'button[onclick*="wahDownloadFile"],button[onclick="window.print()"],#wah-rpt-print-btn';
+  function mark() {
+    var list = document.querySelectorAll(SEL);
+    for (var i = 0; i < list.length; i++) {
+      var b = list[i]; if (b.getAttribute('data-nodl')) continue;
+      b.setAttribute('data-nodl', '1'); b.setAttribute('aria-disabled', 'true'); b.title = MSG;
+    }
+  }
+  var t = 0;
+  function sched() { if (!t) t = setTimeout(function () { t = 0; mark(); }, 50); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mark); else mark();
+  try { new MutationObserver(sched).observe(document.body, { childList: true, subtree: true }); } catch (e) {}
 })();
 </script>
 </body>
