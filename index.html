@@ -1912,6 +1912,19 @@ body.wah-rpt-printing .rpt-footer,
   .wah-field-row > div > :is(input, select) { align-self: start; width: 100%; min-width: 0; }
 }
 </style>
+<style id="wah-rpt-async-css">
+/* WAH_RPT_ASYNC_V1: 排版完成前先隱藏未分頁的報告，避免閃動 */
+#wah-rpt-root.rpt-is-laying-out { visibility: hidden; }
+</style>
+<style id="wah-a11y-css">
+/* WAH_A11Y_V1 */
+.text-\[10px\].text-slate-500 { color: #475569; }
+.opacity-65 { opacity: .65; }
+#wah-gap-root .pg-wrap { position: relative; }
+#wah-gap-root .pg-ph-box { display: block; width: 16px; height: 16px; margin-top: 5px; flex: none; }
+#wah-gap-root .pg-sw--out { position: absolute; left: 16px; top: 22px; z-index: 1; line-height: 1.5; }
+#wah-gap-root .pg-wrap--off > .pg-sw--out { opacity: .6; }
+</style>
 <style id="wah-ocr-demo-css">
 /* ===== 文件辨識・待確認（示範版專用；依 Mai 示意圖 ocr_review_mockup） ===== */
 #tab-ocr-review{--o-navy:#1B2B4B;--o-dark:#0F1A2E;--o-gold:#B8935A;--o-gold-text:#7A5C2E;--o-text:#141B26;--o-grey:#5B6577;--o-bg:#F7F5F0;--o-ok:#2F6B4F;--o-alert:#9B2C2C;--o-line:#E5E1D8;--o-line2:#D4CFC4;--o-warn-bg:#F6EEDC;--o-warn-line:#D9C49A;--o-mute:#F1F2F4;--o-field:#D8DCE3}
@@ -2117,7 +2130,7 @@ button[onclick*="wahDownloadFile"], button[onclick="window.print()"], #wah-rpt-p
                         <input type="password" id="login-passcode" value="" placeholder="demo" autocomplete="current-password" class="input-std font-mono tracking-widest" required>
                     </div>
                 </div>
-                <span class="text-[11px] text-slate-400 block">示範版帳號／密碼：<code class="text-[#1B2B4B] font-bold">demo</code> ／ <code class="text-[#1B2B4B] font-bold">demo</code>（資料僅存於本機瀏覽器）</span>
+                <span class="text-[11px] text-slate-500 block">示範版帳號／密碼：<code class="text-[#1B2B4B] font-bold">demo</code> ／ <code class="text-[#1B2B4B] font-bold">demo</code>（資料僅存於本機瀏覽器）</span>
 
                 <div class="flex items-center gap-2 pt-1">
                     <input type="checkbox" id="remember-advisor" checked class="rounded text-[#1B2B4B] focus:ring-[#1B2B4B]">
@@ -2620,7 +2633,7 @@ button[onclick*="wahDownloadFile"], button[onclick="window.print()"], #wah-rpt-p
                     <h2 class="text-lg font-black text-slate-900 tracking-tight">
                         <span id="adv-client-name" class="text-[#1B2B4B]">尊榮客戶</span> · CPA × CFP × 地政士處方箋
                     </h2>
-                    <p class="text-xs text-slate-500">系統依案主之不動產、債權債務、保單結構、繼承人與國籍，以規則引擎產生建議</p>
+                    <p class="text-xs text-slate-600">系統依案主之不動產、債權債務、保單結構、繼承人與國籍，以規則引擎產生建議</p>
                     <p id="adv-engine-meta" class="text-[10px] text-slate-400"></p>
                 </div>
                 <span class="text-xs font-mono font-bold gold-badge px-3 py-1.5 rounded-lg brand-watermark wah-wm-dup">Copyright © 2026 SZU HSIEN</span>
@@ -5257,6 +5270,7 @@ window.WAH_DOWNLOADS = [
 
     </script>
 <script>
+/* WAH_ESC_V1 */ /* WAH_ESC_V2 */ function wahEsc(s) { return String(s == null ? '' : s).replace(/[&<>"'`]/g, function (ch) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '`': '&#96;' })[ch]; }); }
         // =========================================================================
         // 0. 平板／觸控相容層（2026-11-03）：安全儲存、觸控偵測、捲動提示、觸控說明、下載與複製工具
         //    ※ 純介面相容，不涉及任何稅額或財務計算
@@ -6008,7 +6022,7 @@ window.WAH_DOWNLOADS = [
                 inp.addEventListener('focus', fpOnFocus);
                 inp.addEventListener('input', fpOnInput);
                 inp.addEventListener('blur', fpOnBlur);
-                inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); inp.blur(); } });
+                inp.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); inp.blur(); } }); /* WAH_IME_V1 */
             });
             if (typeof wahSxInit === 'function') wahSxInit(host);
             fpUpdateValues();
@@ -6773,7 +6787,7 @@ window.WAH_DOWNLOADS = [
             if (!sel) return;
             if (!clientsDb.length) { sel.innerHTML = '<option value="">尚無客戶案卷</option>'; return; }
             sel.innerHTML = clientsDb.map(c => 
-                `<option value="${c.id}" ${c.id === activeClientId ? 'selected' : ''}>${c.deceasedName} (${c.baseDate || '2026'})</option>`
+                `<option value="${wahEsc(c.id)}" ${c.id === activeClientId ? 'selected' : ''}>${wahEsc(c.deceasedName)} (${wahEsc(c.baseDate || '2026')})</option>`
             ).join('');
         }
 
@@ -6892,7 +6906,7 @@ window.WAH_DOWNLOADS = [
                             <input type="text" value="${escapeHtml(h.name || '')}" placeholder="繼承人姓名" oninput="updateEditorItem('heirs', ${i}, 'name', this.value)" class="input-std font-bold">
                         </div>
                         <div class="sm:col-span-3">
-                            <select onchange="updateEditorItemR('heirs', ${i}, 'relation', this.value)" class="input-std">
+                            <select onchange="updateEditorItemR('heirs', ${i}, 'relation', this.value)" class="input-std" aria-label="繼承人與被繼承人關係">
                                 ${relOpt(h, 'spouse', `配偶 (扣除 ${W(P.spouse)})`)}
                                 ${relOpt(h, 'descendant', `直系血親卑親屬 (${W(P.descendant)}；未成年每年 +${W(P.minorPerYear)})`)}
                                 ${relOpt(h, 'parent', `父母 (${W(P.parent)})`)}
@@ -7030,7 +7044,7 @@ window.WAH_DOWNLOADS = [
                             <input type="number" value="${Number(d.val || 0)}" placeholder="未償金額 (元)" oninput="updateEditorItem('debt', ${i}, 'val', Number(this.value))" class="input-std num-font font-bold text-rose-700">
                         </div>
                         <div class="col-span-3">
-                            <select onchange="updateEditorItemR('debt', ${i}, 'debtType', this.value)" class="input-std">${typeOpt}</select>
+                            <select onchange="updateEditorItemR('debt', ${i}, 'debtType', this.value)" class="input-std" aria-label="債務類型">${typeOpt}</select>
                         </div>
                         <label class="col-span-1 flex items-center gap-1 text-[10px]"><input type="checkbox" ${d.isMarital !== false ? 'checked' : ''} onchange="updateEditorItemR('debt', ${i}, 'isMarital', this.checked)" class="rounded">婚後</label>
                         <div class="col-span-1 text-right">
@@ -7038,9 +7052,9 @@ window.WAH_DOWNLOADS = [
                         </div>
                     </div>
                     <div class="grid grid-cols-12 gap-2 items-center">
-                        <div class="col-span-3 ${isTax ? 'opacity-40' : ''}"><input type="date" value="${escapeHtml(d.approvalDate || '')}" title="原核准（借款）日期" onchange="updateEditorItemR('debt', ${i}, 'approvalDate', this.value)" class="input-std num-font"></div>
-                        <div class="col-span-3 ${isTax ? 'opacity-40' : ''}"><input type="number" value="${Number(d.creditLimit || 0) || ''}" placeholder="核准額度 (元)" onchange="updateEditorItemR('debt', ${i}, 'creditLimit', Number(this.value))" class="input-std num-font"></div>
-                        <div class="col-span-2 ${isTax ? 'opacity-40' : ''}">
+                        <div class="col-span-3 ${isTax ? 'opacity-65' : ''}"><input type="date" value="${escapeHtml(d.approvalDate || '')}" title="原核准（借款）日期" onchange="updateEditorItemR('debt', ${i}, 'approvalDate', this.value)" class="input-std num-font"></div>
+                        <div class="col-span-3 ${isTax ? 'opacity-65' : ''}"><input type="number" value="${Number(d.creditLimit || 0) || ''}" placeholder="核准額度 (元)" onchange="updateEditorItemR('debt', ${i}, 'creditLimit', Number(this.value))" class="input-std num-font"></div>
+                        <div class="col-span-2 ${isTax ? 'opacity-65' : ''}">
                             <select onchange="updateEditorItemR('debt', ${i}, 'fundedToDeceased', this.value)" class="input-std" title="款項是否撥入被繼承人帳戶">
                                 <option value="" ${!d.fundedToDeceased ? 'selected' : ''}>撥入帳戶？未確認</option>
                                 <option value="yes" ${d.fundedToDeceased === 'yes' ? 'selected' : ''}>撥入被繼承人帳戶：是</option>
@@ -7052,7 +7066,7 @@ window.WAH_DOWNLOADS = [
                     <div class="text-[10px] pl-1 flex flex-wrap items-center gap-2">${badge} <span class="text-slate-500">${ev.ok ? '已計入扣除。' : '缺確實證明：預設不扣除、亦不抵減 1030-1（§17 I⑨、細則 §20），另於處方箋顯示「若補足證明」試算。'}</span>
                         <label class="flex items-center gap-1 text-slate-600"><input type="checkbox" ${d.duringIllness ? 'checked' : ''} onchange="updateEditorItemR('debt', ${i}, 'duringIllness', this.checked)" class="rounded">重病期間舉債（細則 §13）</label></div>
                     ${isTax ? '' : `<div class="flex flex-wrap items-center gap-2 pl-1 text-[10px] text-slate-600" data-debt-fp="${escapeHtml(d.fpCell || '')}"><span class="font-bold text-[#1B2B4B]">財務規劃表用途分類</span>
-                        <select onchange="updateEditorItemR('debt', ${i}, 'fpCell', this.value)" class="input-std !py-0.5 !w-52"><option value="" ${!d.fpCell ? 'selected' : ''}>依名稱自動判斷（無法判斷則不帶入）</option>${(typeof FP_LIAB_CELLS !== 'undefined' ? Object.entries(FP_LIAB_CELLS) : []).map(([k, v]) => `<option value="${k}" ${d.fpCell === k ? 'selected' : ''}>${k} ${v}</option>`).join('')}</select>
+                        <select onchange="updateEditorItemR('debt', ${i}, 'fpCell', this.value)" class="input-std !py-0.5 !w-52" aria-label="帶入財務規劃表的欄位"><option value="" ${!d.fpCell ? 'selected' : ''}>依名稱自動判斷（無法判斷則不帶入）</option>${(typeof FP_LIAB_CELLS !== 'undefined' ? Object.entries(FP_LIAB_CELLS) : []).map(([k, v]) => `<option value="${k}" ${d.fpCell === k ? 'selected' : ''}>${k} ${v}</option>`).join('')}</select>
                         <input type="text" value="${escapeHtml(d.fpNote || '')}" placeholder="用途說明／待確認事項（借款契約、撥款帳戶、資金用途）" onchange="updateEditorItemR('debt', ${i}, 'fpNote', this.value)" class="input-std !py-0.5 !w-96"></div>`}
                 </div>`;
             }).join('');
@@ -7066,7 +7080,7 @@ window.WAH_DOWNLOADS = [
                 <div class="bg-amber-50/40 p-2.5 rounded-xl border border-amber-200 text-xs space-y-1.5">
                     <div class="grid grid-cols-12 gap-2 items-center">
                         <div class="col-span-4"><input type="text" value="${escapeHtml(ins.name || '')}" placeholder="保單名稱" oninput="updateEditorItem('insurance', ${i}, 'name', this.value)" class="input-std font-bold"></div>
-                        <div class="col-span-3"><select onchange="updateEditorItemR('insurance', ${i}, 'insType', this.value)" class="input-std">${Object.entries(WAH_INS_TYPES).map(([k, v]) => `<option value="${k}" ${ins.insType === k ? 'selected' : ''}>${v}</option>`).join('')}</select></div>
+                        <div class="col-span-3"><select onchange="updateEditorItemR('insurance', ${i}, 'insType', this.value)" class="input-std" aria-label="保單類型">${Object.entries(WAH_INS_TYPES).map(([k, v]) => `<option value="${k}" ${ins.insType === k ? 'selected' : ''}>${v}</option>`).join('')}</select></div>
                         <div class="col-span-4"><input type="number" value="${Number(ins.taxVal || ins.marketVal || 0)}" placeholder="身故給付／保單價值" title="遺產稅用：身故給付或保單價值準備金（醫療險未請領理賠不列入遺產總額，僅於下方欄位記錄）" onchange="updateEditorItemR('insurance', ${i}, 'taxVal', Number(this.value))" class="input-std num-font font-bold text-[#7A5C2E]"></div>
                         <div class="col-span-1 text-right"><button onclick="removeEditorItem('insurance', ${i})" class="p-1 text-slate-400 hover:text-rose-600"><span class="material-icons text-sm">delete</span></button></div>
                     </div>
@@ -7109,7 +7123,7 @@ window.WAH_DOWNLOADS = [
                 <div class="bg-violet-50/40 p-2.5 rounded-xl border border-violet-200 text-xs space-y-1.5">
                     <div class="grid grid-cols-12 gap-2 items-center">
                         <div class="col-span-3"><input type="text" value="${escapeHtml(g.donee || '')}" placeholder="受贈人" onchange="updateEditorItemR('gifts2y', ${i}, 'donee', this.value)" class="input-std font-bold"></div>
-                        <div class="col-span-3"><select onchange="updateEditorItemR('gifts2y', ${i}, 'relation', this.value)" class="input-std">${Object.entries(WAH_GIFT_REL).map(([k, v]) => `<option value="${k}" ${g.relation === k ? 'selected' : ''}>${v}</option>`).join('')}</select></div>
+                        <div class="col-span-3"><select onchange="updateEditorItemR('gifts2y', ${i}, 'relation', this.value)" class="input-std" aria-label="受贈人關係">${Object.entries(WAH_GIFT_REL).map(([k, v]) => `<option value="${k}" ${g.relation === k ? 'selected' : ''}>${v}</option>`).join('')}</select></div>
                         <div class="col-span-2"><input type="date" value="${escapeHtml(g.date || '')}" title="贈與日期" onchange="updateEditorItemR('gifts2y', ${i}, 'date', this.value)" class="input-std num-font"></div>
                         <div class="col-span-3">${num('val', '贈與財產價值')}</div>
                         <div class="col-span-1 text-right"><button onclick="removeEditorItem('gifts2y', ${i})" class="p-1 text-slate-400 hover:text-rose-600"><span class="material-icons text-sm">delete</span></button></div>
@@ -8893,12 +8907,12 @@ window.WAH_DOWNLOADS = [
                 </div>
                 <div class="p-3 bg-slate-50 rounded-xl space-y-1">
                     <span class="font-bold text-slate-800 block border-b border-slate-200 pb-1 mb-1">2. 股權證券與存款 (${(c.equity || []).length} 筆)</span>
-                    ${(c.equity || []).map(e => `<div class="flex justify-between text-slate-600"><span>• ${e.name}</span><span class="num-font font-medium">${fmtMoney(e.taxVal)}</span></div>`).join('')}
+                    ${(c.equity || []).map(e => `<div class="flex justify-between text-slate-600"><span>• ${wahEsc(e.name)}</span><span class="num-font font-medium">${fmtMoney(e.taxVal)}</span></div>`).join('')}
                     <div class="flex justify-between pt-1 border-t border-slate-200 font-bold text-[#1B2B4B]"><span>股權與存款小計</span><span class="num-font">${fmtMoney(act.eqTotal)}</span></div>
                 </div>
                 <div class="p-3 bg-slate-50 rounded-xl space-y-1">
                     <span class="font-bold text-slate-800 block border-b border-slate-200 pb-1 mb-1">3. 動產、球證與應收債權 (${(c.movable || []).length} 筆)</span>
-                    ${(c.movable || []).map(m => `<div class="flex justify-between text-slate-600"><span>• ${m.name}</span><span class="num-font font-medium">${fmtMoney(m.taxVal)}</span></div>`).join('')}
+                    ${(c.movable || []).map(m => `<div class="flex justify-between text-slate-600"><span>• ${wahEsc(m.name)}</span><span class="num-font font-medium">${fmtMoney(m.taxVal)}</span></div>`).join('')}
                     <div class="flex justify-between pt-1 border-t border-slate-200 font-bold text-[#1B2B4B]"><span>動產與債權小計</span><span class="num-font">${fmtMoney(act.movTotal)}</span></div>
                 </div>
                 <div class="p-3 bg-rose-50 rounded-xl border border-rose-200 space-y-1">
@@ -8962,7 +8976,7 @@ window.WAH_DOWNLOADS = [
                         ${buildDeductionLines(act).filter(l => l.amt !== 0).map(l => `${l.amt < 0 ? '+' : '-'} ${escapeHtml(l.label)} ${fmtMoney(Math.abs(l.amt))}`).join('<br>')}<br>
                         = 課稅淨額 <strong>${fmtMoney(act.netTaxableEstate)}</strong> ➔ 稅額 ${fmtMoney(act.estTaxBeforeCredit)}${act.giftCredit ? ` − §11 II 扣抵 ${fmtMoney(act.giftCredit)}` : ''} ＝ 應納稅額 <strong class="text-emerald-600 text-sm">${fmtMoney(act.estTax)}</strong><br>
                         ${act.whatIfEvidenced ? `<span class="text-[10px] text-rose-700">若補足債務證明（+${fmtMoney(act.whatIfEvidenced.addedDebt)}）：稅額 ${fmtMoney(act.whatIfEvidenced.estTax)}</span><br>` : ''}
-                        <span class="text-[10px] ${act.taxParams.provisional ? 'text-rose-700 font-bold' : 'text-slate-400'}">適用 ${act.taxParams.appliedYear} 年金額（判斷日 ${act.refDate}）${act.taxParams.fallbackNote ? '；' + escapeHtml(act.taxParams.fallbackNote) : ''}</span>
+                        <span class="text-[10px] ${act.taxParams.provisional ? 'text-rose-700 font-bold' : 'text-slate-400'}">適用 ${wahEsc(act.taxParams.appliedYear)} 年金額（判斷日 ${wahEsc(act.refDate)}）${act.taxParams.fallbackNote ? '；' + escapeHtml(act.taxParams.fallbackNote) : ''}</span>
                     </p>
                 </div>
 `}
@@ -9205,7 +9219,7 @@ window.WAH_DOWNLOADS = [
 <head>
 <meta charset="UTF-8">
 <link rel="icon" href="${WAH_FAVICON_URI}">
-<title>${c.deceasedName} - 家族資產傳承與稅務架構精算總報告｜世承家族財富顧問</title>
+<title>${wahEsc(c.deceasedName)} - 家族資產傳承與稅務架構精算總報告｜世承家族財富顧問</title>
 <style>
 body { font-family: 'Microsoft JhengHei', sans-serif; color: #141B26; line-height: 1.7; padding: 40px; max-width: 900px; margin: auto; }
 h1 { color: #1B2B4B; border-bottom: 3px solid #B8935A; padding-bottom: 10px; }
@@ -9220,9 +9234,9 @@ th { background: #F1F5F9; color: #1B2B4B; }
 <body>
 <div style="margin:-10px 0 10px -10px;" role="img" aria-label="世承家族財富顧問 Heritage Gate Wealth Advisory 標誌">${wahLogoHtml('horizontal', 480)}</div>
 ${BRAND.watermark ? `<span class="badge">${escapeHtml(BRAND.watermark)}</span>` : ''}
-<h1>【CPA × 地政士 × CFP 聯合精算】${c.deceasedName} 家族資產傳承與稅務架構總報告</h1>
-<p><strong>規劃基準日：</strong>${c.baseDate} ｜ <strong>簽核顧問：</strong>${advisorName}</p>
-<p><strong>案件背景備註：</strong>${c.caseNotes || '依 114/115 年最新遺贈稅新制試算'}</p>
+<h1>【CPA × 地政士 × CFP 聯合精算】${wahEsc(c.deceasedName)} 家族資產傳承與稅務架構總報告</h1>
+<p><strong>規劃基準日：</strong>${wahEsc(c.baseDate)} ｜ <strong>簽核顧問：</strong>${wahEsc(advisorName)}</p>
+<p><strong>案件背景備註：</strong>${wahEsc(c.caseNotes || '依 114/115 年最新遺贈稅新制試算')}</p>
 
 <h2>壹、 核心稅務精算與 1030-1 配偶請求權核定摘要</h2>
 <div class="highlight">
@@ -9241,12 +9255,12 @@ ${act.giftsAddedTotal ? `• 死亡前 2 年內贈與併入（§15）：${fmtMon
 <thead><tr><th>類別</th><th>項目名稱</th><th>課稅現值 (元)</th><th>1030-1 屬性</th></tr></thead>
 <tbody>
 ${(c.realEstate || []).map(r => `<tr><td>${r.isFarmland ? '農業用地' : ({ lease375: '三七五租約土地', publicReserve: '公共設施保留地' })[r.landType] || '不動產'}</td><td>${escapeHtml(r.name)}</td><td>${fmtMoney(r.isFarmland ? r.announcedVal : (r.landType === 'lease375' ? Math.round(Number(r.taxVal || 0) * 2 / 3) : r.taxVal))}${r.isFarmland ? '（公告現值）' : (r.landType === 'lease375' ? '（公告現值 × 2/3）' : '')}</td><td>${r.isMarital !== false ? '婚後有償' : '非婚後'}</td></tr>`).join('')}
-${(c.equity || []).map(e => `<tr><td>股權/存款</td><td>${e.name}</td><td>${fmtMoney(e.taxVal)}</td><td>${e.isMarital !== false ? '婚後有償' : '非婚後'}</td></tr>`).join('')}
-${(c.movable || []).map(m => `<tr><td>動產/債權</td><td>${m.name}</td><td>${fmtMoney(m.taxVal)}</td><td>${m.isMarital !== false ? '婚後有償' : '非婚後'}</td></tr>`).join('')}
+${(c.equity || []).map(e => `<tr><td>股權/存款</td><td>${wahEsc(e.name)}</td><td>${fmtMoney(e.taxVal)}</td><td>${e.isMarital !== false ? '婚後有償' : '非婚後'}</td></tr>`).join('')}
+${(c.movable || []).map(m => `<tr><td>動產/債權</td><td>${wahEsc(m.name)}</td><td>${fmtMoney(m.taxVal)}</td><td>${m.isMarital !== false ? '婚後有償' : '非婚後'}</td></tr>`).join('')}
 </tbody>
 </table>
 
-<h2>貳之一、 扣除額明細（${act.taxParams.appliedYear} 年金額，判斷日 ${act.refDate}）</h2>
+<h2>貳之一、 扣除額明細（${wahEsc(act.taxParams.appliedYear)} 年金額，判斷日 ${wahEsc(act.refDate)}）</h2>
 ${act.taxParams.fallbackNote ? `<p style="color:#B45309">${escapeHtml(act.taxParams.fallbackNote)}</p>` : ''}
 <table>
 <thead><tr><th>項目（法源）</th><th>金額 (元)</th></tr></thead>
@@ -9415,7 +9429,7 @@ ${runPrescriptionRules(c, act, { docList: (typeof getClientDocList === 'function
                             <div class="flex justify-between items-center border-b border-slate-100 pb-2.5 mb-3">
                                 <h3 class="font-bold text-[#1B2B4B] text-sm flex items-center gap-1.5">
                                     <span class="material-icons text-base">${catMeta.icon}</span>
-                                    ${catMeta.title}
+                                    ${wahEsc(catMeta.title)}
                                 </h3>
                                 <span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${catDoneCount === catAllItems.length ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'}">
                                     ${catDoneCount} / ${catAllItems.length}
@@ -9428,7 +9442,7 @@ ${runPrescriptionRules(c, act, { docList: (typeof getClientDocList === 'function
                                             <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleDocItem('${item.id}', this.checked)" class="mt-0.5 rounded text-[#1B2B4B] focus:ring-[#1B2B4B] cursor-pointer">
                                             <div class="flex-grow">
                                                 <div class="flex justify-between items-start gap-2">
-                                                    <span class="font-bold ${item.checked ? 'line-through text-slate-400' : 'text-slate-800'}">${item.title}</span>
+                                                    <span class="font-bold ${item.checked ? 'line-through text-slate-400' : 'text-slate-800'}">${wahEsc(item.title)}</span>
                                                     <div class="flex items-center gap-1 shrink-0">
                                                         <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${item.checked ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-800'}">
                                                             ${item.checked ? '已備齊' : '待補件'}
@@ -9438,8 +9452,8 @@ ${runPrescriptionRules(c, act, { docList: (typeof getClientDocList === 'function
                                                         </button>
                                                     </div>
                                                 </div>
-                                                <p class="text-[11px] text-slate-500 mt-0.5">${item.desc || ''}</p>
-                                                <input type="text" value="${item.note || ''}" placeholder="點擊輸入備註（如：已向公所申請中...）" oninput="updateDocItemNote('${item.id}', this.value)" class="mt-1.5 w-full bg-white/80 border border-slate-200 rounded-lg px-2 py-1 text-[11px] text-slate-700 focus:outline-none focus:border-[#1B2B4B]">
+                                                <p class="text-[11px] text-slate-500 mt-0.5">${wahEsc(item.desc || '')}</p>
+                                                <input type="text" value="${wahEsc(item.note || '')}" placeholder="點擊輸入備註（如：已向公所申請中...）" oninput="updateDocItemNote('${item.id}', this.value)" class="mt-1.5 w-full bg-white/80 border border-slate-200 rounded-lg px-2 py-1 text-[11px] text-slate-700 focus:outline-none focus:border-[#1B2B4B]">
                                             </div>
                                         </div>
                                     </div>
@@ -9642,7 +9656,7 @@ ${runPrescriptionRules(c, act, { docList: (typeof getClientDocList === 'function
             document.getElementById('kyc-heirs-rows').innerHTML = kycDraft.heirs.map((h, i) => `
                 <div class="grid grid-cols-12 gap-2 items-center bg-white p-2 rounded-xl border border-slate-200 text-xs">
                     <div class="col-span-5">
-                        <input type="text" value="${h.name}" placeholder="成員姓名" oninput="kycDraft.heirs[${i}].name=this.value" class="input-std">
+                        <input type="text" value="${wahEsc(h.name)}" placeholder="成員姓名" oninput="kycDraft.heirs[${i}].name=this.value" class="input-std">
                     </div>
                     <div class="col-span-6">
                         <select onchange="kycDraft.heirs[${i}].relation=this.value" class="input-std">
@@ -9662,7 +9676,7 @@ ${runPrescriptionRules(c, act, { docList: (typeof getClientDocList === 'function
             document.getElementById('kyc-realEstate-rows').innerHTML = kycDraft.realEstate.map((r, i) => `
                 <div class="grid grid-cols-12 gap-2 items-center bg-white p-2 rounded-xl border border-slate-200 text-xs">
                     <div class="col-span-6">
-                        <input type="text" value="${r.name}" placeholder="門牌地址或地號（如：○○區房產／○○段農地）" oninput="kycDraft.realEstate[${i}].name=this.value" class="input-std">
+                        <input type="text" value="${wahEsc(r.name)}" placeholder="門牌地址或地號（如：○○區房產／○○段農地）" oninput="kycDraft.realEstate[${i}].name=this.value" class="input-std">
                     </div>
                     <div class="col-span-5">
                         <input type="number" value="${r.taxVal}" placeholder="概估現值或價值 (元)" oninput="kycDraft.realEstate[${i}].taxVal=Number(this.value)" class="input-std num-font">
@@ -9677,7 +9691,7 @@ ${runPrescriptionRules(c, act, { docList: (typeof getClientDocList === 'function
             document.getElementById('kyc-equity-rows').innerHTML = kycDraft.equity.map((e, i) => `
                 <div class="grid grid-cols-12 gap-2 items-center bg-white p-2 rounded-xl border border-slate-200 text-xs">
                     <div class="col-span-6">
-                        <input type="text" value="${e.name}" placeholder="銀行存款／股票名稱" oninput="kycDraft.equity[${i}].name=this.value" class="input-std">
+                        <input type="text" value="${wahEsc(e.name)}" placeholder="銀行存款／股票名稱" oninput="kycDraft.equity[${i}].name=this.value" class="input-std">
                     </div>
                     <div class="col-span-5">
                         <input type="number" value="${e.taxVal}" placeholder="概估金額 (元)" oninput="kycDraft.equity[${i}].taxVal=Number(this.value)" class="input-std num-font">
@@ -9692,10 +9706,10 @@ ${runPrescriptionRules(c, act, { docList: (typeof getClientDocList === 'function
             document.getElementById('kyc-insurance-rows').innerHTML = kycDraft.insurance.map((ins, i) => `
                 <div class="grid grid-cols-12 gap-2 items-center bg-white p-2 rounded-xl border border-amber-200 text-xs">
                     <div class="col-span-4">
-                        <input type="text" value="${ins.name}" placeholder="保險公司與險種" oninput="kycDraft.insurance[${i}].name=this.value" class="input-std">
+                        <input type="text" value="${wahEsc(ins.name)}" placeholder="保險公司與險種" oninput="kycDraft.insurance[${i}].name=this.value" class="input-std">
                     </div>
                     <div class="col-span-4">
-                        <input type="text" value="${ins.beneficiary}" placeholder="身故受益人" oninput="kycDraft.insurance[${i}].beneficiary=this.value" class="input-std">
+                        <input type="text" value="${wahEsc(ins.beneficiary)}" placeholder="身故受益人" oninput="kycDraft.insurance[${i}].beneficiary=this.value" class="input-std">
                     </div>
                     <div class="col-span-3">
                         <input type="number" value="${ins.taxVal}" placeholder="保額/價值 (元)" oninput="kycDraft.insurance[${i}].taxVal=Number(this.value)" class="input-std num-font">
@@ -9710,7 +9724,7 @@ ${runPrescriptionRules(c, act, { docList: (typeof getClientDocList === 'function
             document.getElementById('kyc-movable-rows').innerHTML = kycDraft.movable.map((m, i) => `
                 <div class="grid grid-cols-12 gap-2 items-center bg-white p-2 rounded-xl border border-slate-200 text-xs">
                     <div class="col-span-6">
-                        <input type="text" value="${m.name}" placeholder="高爾夫球證／汽車／借給親友之債權" oninput="kycDraft.movable[${i}].name=this.value" class="input-std">
+                        <input type="text" value="${wahEsc(m.name)}" placeholder="高爾夫球證／汽車／借給親友之債權" oninput="kycDraft.movable[${i}].name=this.value" class="input-std">
                     </div>
                     <div class="col-span-5">
                         <input type="number" value="${m.taxVal}" placeholder="概估金額 (元)" oninput="kycDraft.movable[${i}].taxVal=Number(this.value)" class="input-std num-font">
@@ -9725,7 +9739,7 @@ ${runPrescriptionRules(c, act, { docList: (typeof getClientDocList === 'function
             document.getElementById('kyc-debt-rows').innerHTML = kycDraft.debt.map((d, i) => `
                 <div class="grid grid-cols-12 gap-2 items-center bg-white p-2 rounded-xl border border-rose-200 text-xs">
                     <div class="col-span-6">
-                        <input type="text" value="${d.name}" placeholder="貸款銀行名稱" oninput="kycDraft.debt[${i}].name=this.value" class="input-std">
+                        <input type="text" value="${wahEsc(d.name)}" placeholder="貸款銀行名稱" oninput="kycDraft.debt[${i}].name=this.value" class="input-std">
                     </div>
                     <div class="col-span-5">
                         <input type="number" value="${d.val}" placeholder="未償貸款餘額 (元)" oninput="kycDraft.debt[${i}].val=Number(this.value)" class="input-std num-font">
@@ -9869,7 +9883,7 @@ ${runPrescriptionRules(c, act, { docList: (typeof getClientDocList === 'function
             if (targetContent) targetContent.classList.remove('hidden');
             if (targetBtn) targetBtn.classList.add('active');
             if (tabId === 'tab-tools' && typeof refreshCover === 'function') refreshCover();
-            if (tabId === 'tab-client-report' && typeof wahRptRender === 'function') wahRptRender();
+            if (tabId === 'tab-client-report' && typeof wahRptRender === 'function') { if (typeof window.wahRptRenderAsync === 'function') window.wahRptRenderAsync(); else wahRptRender(); }
             if (tabId === 'tab-fin-plan' && typeof finPlanRender === 'function') finPlanRender();
             if (tabId === 'tab-willgen' && typeof willgenRender === 'function') willgenRender();
             if (tabId === 'tab-downloads' && typeof wahRenderDownloads === 'function') wahRenderDownloads();
@@ -9927,7 +9941,9 @@ ${runPrescriptionRules(c, act, { docList: (typeof getClientDocList === 'function
             toast.className = `px-4 py-3 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 ${
                 isError ? 'bg-rose-600 text-white' : 'bg-[#1B2B4B] text-white border border-[#B8935A]/50'
             }`;
-            toast.innerHTML = `<span class="material-icons text-sm">${isError ? 'error' : 'verified'}</span><span>${msg}</span>`;
+            const _ic = document.createElement('span'); _ic.className = 'material-icons text-sm'; _ic.setAttribute('aria-hidden', 'true'); _ic.textContent = isError ? 'error' : 'verified';
+            const _tx = document.createElement('span'); _tx.textContent = String(msg == null ? '' : msg);
+            toast.replaceChildren(_ic, _tx); /* WAH_ESC_V1: 訊息一律當純文字 */
             container.appendChild(toast);
             setTimeout(() => {
                 toast.style.opacity = '0';
@@ -10302,8 +10318,38 @@ ${runPrescriptionRules(c, act, { docList: (typeof getClientDocList === 'function
     if (mq.matches) { if (sw.parentElement !== left) left.appendChild(sw); slot.hidden = true; }
     else { if (sw.parentElement !== slot) slot.appendChild(sw); slot.hidden = false; }
   }
+  /* WAH_DRAWER_INERT_V1：選單開啟時，背後頁面設為 inert（不可聚焦、不被讀屏讀到）；Tab 在選單內循環 */
+  var wahInerted = [];
+  function wahDrawerInert(open) {
+    wahInerted.forEach(function (el) { el.inert = false; el.removeAttribute('inert'); el.removeAttribute('data-wah-inert'); });
+    wahInerted = [];
+    if (!open) return;
+    var d = document.getElementById('wah-tabbar-wrap'); if (!d) return;
+    var keep = function (el) { return el.contains(d) || el.id === 'toast-container' || el.id === 'wah-drawer-bg' || /^(SCRIPT|STYLE|TEMPLATE|LINK)$/.test(el.tagName); };
+    for (var n = d; n && n !== document.body; n = n.parentElement) {
+      var p = n.parentElement; if (!p) break;
+      Array.prototype.forEach.call(p.children, function (sib) {
+        if (sib === n || keep(sib) || sib.inert || sib.hasAttribute('inert')) return;
+        sib.inert = true; sib.setAttribute('inert', ''); sib.setAttribute('data-wah-inert', '1'); wahInerted.push(sib);
+      });
+    }
+  }
+  function wahDrawerFocusables() {
+    var d = document.getElementById('wah-tabbar-wrap'); if (!d) return [];
+    return Array.prototype.filter.call(d.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'), function (el) {
+      return !el.disabled && el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden';
+    });
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Tab' || !document.documentElement.classList.contains('wah-drawer-open')) return;
+    var f = wahDrawerFocusables(); if (!f.length) return;
+    var first = f[0], last = f[f.length - 1], a = document.activeElement, inside = a && document.getElementById('wah-tabbar-wrap').contains(a);
+    if (e.shiftKey && (a === first || !inside)) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && (a === last || !inside)) { e.preventDefault(); first.focus(); }
+  });
   function setDrawer(open) {
     var h = document.documentElement; h.classList.toggle('wah-drawer-open', !!open);
+    wahDrawerInert(!!open);
     var b = document.getElementById('wah-burger'); if (b) { b.setAttribute('aria-expanded', open ? 'true' : 'false'); b.setAttribute('aria-label', open ? '關閉選單' : '開啟選單'); }
     if (open) { var f = document.querySelector('#wah-tabs .tab-btn.active') || document.querySelector('#wah-tabs .tab-btn'); if (f) setTimeout(function () { try { f.focus({ preventScroll: true }); } catch (e) { } }, 60); }
   }
@@ -10434,7 +10480,8 @@ ${runPrescriptionRules(c, act, { docList: (typeof getClientDocList === 'function
     var ha = r.status === 'off' ? { t: '—', c: '' }
       : r.status === 'pending' ? { t: '待填', c: 'pg-amt--pend' }
       : (r.gap === 0 ? { t: '0/足額', c: 'pg-amt--ok' } : { t: wan(r.gap), c: 'pg-amt--gap' });
-    var sm = '<summary class="pg-sum"><span class="pg-sw">' + chk('item', key, 'on', r.on, '<span class="sr-only">啟用</span>') + '</span>' +
+    var swOut = '<span class="pg-sw pg-sw--out">' + chk('item', key, 'on', r.on, '<span class="sr-only">啟用' + esc(r.label) + '</span>') + '</span>';
+    var sm = '<summary class="pg-sum"><span class="pg-sw pg-sw--ph" aria-hidden="true"><span class="pg-chk"><i class="pg-ph-box"></i></span></span>' +
       '<span class="pg-name">' + esc(r.label) + ' ' + badge(r) + '</span>' +
       '<span class="pg-cols"><span class="pg-col"><em>需求</em><b class="pg-num wah-c-deduct">' + (r.status === 'off' ? '—' : wan(r.need)) + '</b></span>' +
       '<span class="pg-col"><em>既有保障</em><b class="pg-num wah-c-asset">' + (r.status === 'off' ? '—' : wan(r.existing)) + '</b></span>' +
@@ -10459,7 +10506,7 @@ ${runPrescriptionRules(c, act, { docList: (typeof getClientDocList === 'function
     }
     body += flagsHtml(r.flags);
     body += '<div class="pg-row"><div class="pg-lab">顧問備註</div><div class="pg-ctl pg-ctl--wide">' + txt('item', key, 'note', r.note, '一行說明（會帶入報告書）', 'pg-wide') + '</div><div class="pg-eff"></div></div>';
-    return '<details class="pg-item' + (r.on ? '' : ' pg-item--off') + '" data-open-key="gap:' + key + '"' + open + '>' + sm + body + '</div></details>';
+    return '<div class="pg-wrap' + (r.on ? '' : ' pg-wrap--off') + '">' + swOut + '<details class="pg-item' + (r.on ? '' : ' pg-item--off') + '" data-open-key="gap:' + key + '"' + open + '>' + sm + body + '</div></details></div>';
   }
 
   function gapSection(res) {
@@ -10542,10 +10589,29 @@ ${runPrescriptionRules(c, act, { docList: (typeof getClientDocList === 'function
     var res;
     try { res = wahGapComputeAll(c); } catch (e) { root.innerHTML = '<div class="pg-empty">保障缺口試算發生錯誤：' + esc(e && e.message) + '</div>'; if (window.console) console.error(e); return; }
     root.innerHTML = gapSection(res) + propSection(res);
+    wahPgPlaceSwitches(root);
     window.scrollTo(0, sy);
     if (fk) {
       var el = root.querySelector('[data-pgk="' + fk.replace(/["\\]/g, '\\$&') + '"]');
       if (el) { try { el.focus({ preventScroll: true }); if (ss && el.setSelectionRange && !el.hasAttribute('data-pgn') && el.type !== 'number') el.setSelectionRange(ss[0], ss[1]); } catch (e) { } }
+    }
+  }
+  /* WAH_A11Y_V1：把 <summary> 外的啟用開關放回佔位格的位置（版面與原本相同） */
+  function wahPgPlaceSwitches(root) {
+    if (!root) return;
+    root.querySelectorAll('.pg-wrap').forEach(function (w) {
+      var ph = w.querySelector('.pg-sw--ph'), sw = w.querySelector('.pg-sw--out');
+      if (!ph || !sw) return;
+      var a = w.getBoundingClientRect(), b = ph.getBoundingClientRect();
+      if (!b.width && !b.height) return;
+      sw.style.left = (b.left - a.left) + 'px';
+      sw.style.top = (b.top - a.top) + 'px';
+    });
+    if (!root.__pgRO) {
+      root.__pgRO = true;
+      var again = function () { requestAnimationFrame(function () { wahPgPlaceSwitches(root); }); };
+      if (window.ResizeObserver) new ResizeObserver(again).observe(root); else window.addEventListener('resize', again);
+      root.addEventListener('toggle', again, true);
     }
   }
   function renderSoon(ms) { clearTimeout(timer); timer = setTimeout(function () { if (visible()) render(); }, ms == null ? 350 : ms); }
@@ -12197,6 +12263,44 @@ ${runPrescriptionRules(c, act, { docList: (typeof getClientDocList === 'function
     setTimeout(function () { window.print(); setTimeout(done, 1500); }, 50);
   }
 
+  /* WAH_RPT_ASYNC_V1: 分段產生報告，每頁之間讓出主執行緒（INP）；結果與 wahRptRender() 相同 */
+  var rptJob = 0;
+  function rptYield() {
+    if (window.scheduler && typeof window.scheduler.yield === 'function') return window.scheduler.yield();
+    return new Promise(function (r) { setTimeout(r, 0); });
+  }
+  function wahRptRenderAsync() {
+    var root = document.getElementById(ROOT_ID);
+    if (!root) return Promise.resolve();
+    var job = ++rptJob;
+    var c = typeof getActiveClient === 'function' ? getActiveClient() : null;
+    root.removeAttribute('data-rpt-ready');
+    return rptYield().then(function () {
+      if (job !== rptJob) return;
+      if (!c) { wahRptRender(); root.setAttribute('data-rpt-ready', '1'); return; }
+      var out = renderAll(c);
+      root.setAttribute('aria-busy', 'true');
+      root.classList.add('rpt-is-laying-out');
+      root.innerHTML = out.html;
+      renderToolbar(out.ctx.state);
+      bind(root, c);
+      var starts = Array.prototype.slice.call(root.querySelectorAll('.rpt-page')).filter(function (p) {
+        return p.getAttribute('data-cont') !== '1' && !p.classList.contains('is-off');
+      });
+      var i = 0;
+      function step() {
+        if (job !== rptJob) return;
+        if (i < starts.length) { paginateOne(starts[i++]); return rptYield().then(step); }
+        hideOverflowingSegLabels(root);
+        root.classList.remove('rpt-is-laying-out');
+        root.removeAttribute('aria-busy');
+        root.setAttribute('data-rpt-ready', '1');
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (job === rptJob) wahRptPaginate(root); });
+      }
+      return rptYield().then(step);
+    }).catch(function (err) { /* WAH_RPT_ASYNC_V2 */ root.classList.remove('rpt-is-laying-out'); root.removeAttribute('aria-busy'); throw err; });
+  }
+  window.wahRptRenderAsync = wahRptRenderAsync;
   window.wahRptRender = wahRptRender;
   window.wahRptPrint = wahRptPrint;
   window.wahRptPaginate = wahRptPaginate;
